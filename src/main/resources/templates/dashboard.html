@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+
+    <h1>Asset Management Dashboard</h1>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+            <h3>Total Assets</h3>
+            <span th:text="${stats.totalAssets}"></span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Available Assets</h3>
+            <span th:text="${stats.availableAssets}"></span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Loaned Assets</h3>
+            <span th:text="${stats.loanedAssets}"></span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Pending Loans</h3>
+            <span th:text="${stats.pendingLoans}"></span>
+        </div>
+
+        <div class="stat-card">
+            <h3>Overdue Loans</h3>
+            <span th:text="${stats.overdueLoans}"></span>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

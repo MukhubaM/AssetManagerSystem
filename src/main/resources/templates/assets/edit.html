@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Edit Asset - Asset Manager</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container" style="max-width: 480px;">
+
+  <div class="card">
+
+    <h2>Edit Asset</h2>
+
+    <form
+            method="post"
+            enctype="multipart/form-data"
+            th:action="@{/assets/{id}/edit(id=${assetId})}"
+            th:object="${assetRequest}">
+
+      <label for="title">Title</label>
+      <input id="title" th:field="*{title}" placeholder="Title">
+      <span class="error-text" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+
+      <label for="category">Category</label>
+      <input id="category" th:field="*{category}" placeholder="Category">
+      <span class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+
+      <label for="serialNumber">Serial Number</label>
+      <input id="serialNumber" th:field="*{serialNumber}" placeholder="Serial Number">
+      <span class="error-text" th:if="${#fields.hasErrors('serialNumber')}" th:errors="*{serialNumber}"></span>
+
+      <label for="acquisitionDate">Acquisition Date</label>
+      <input type="date" id="acquisitionDate" th:field="*{acquisitionDate}">
+
+      <label for="cost">Cost</label>
+      <input type="number" step="0.01" id="cost" th:field="*{cost}">
+
+      <label for="location">Location</label>
+      <input id="location" th:field="*{location}" placeholder="Location">
+
+      <label for="condition">Condition</label>
+      <input id="condition" th:field="*{condition}" placeholder="Condition">
+
+      <label for="photo">Replace Photo (optional)</label>
+      <input type="file" id="photo" th:field="*{photo}">
+
+      <button type="submit">Save Changes</button>
+
+    </form>
+
+  </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${asset.title}">Asset</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container" style="max-width: 480px;">
+
+    <div class="card">
+
+        <h2 th:text="${asset.title}"></h2>
+
+        <p>Category: <span th:text="${asset.category}"></span></p>
+        <p>Serial Number: <span th:text="${asset.serialNumber}"></span></p>
+        <p>Location: <span th:text="${asset.location}"></span></p>
+        <p>Condition: <span th:text="${asset.condition}"></span></p>
+        <p>Status: <span class="badge" th:text="${asset.status}"></span></p>
+
+        <img
+                th:if="${asset.photoPath != null}"
+                th:src="@{'/uploads/' + ${asset.photoPath}}"
+                width="250"
+                alt="Asset photo">
+
+        <div sec:authorize="hasAnyRole('ADMIN','MANAGER')">
+
+            <a class="btn secondary" th:href="@{/assets/{id}/edit(id=${asset.assetId})}">Edit</a>
+
+            <form
+                    class="inline-form"
+                    th:if="${asset.status.name() != 'RETIRED'}"
+                    th:action="@{/assets/{id}/retire(id=${asset.assetId})}"
+                    method="post">
+
+                <button type="submit" class="danger">Retire Asset</button>
+
+            </form>
+
+        </div>
+
+        <form
+                sec:authorize="hasAnyRole('ADMIN','MANAGER','BORROWER')"
+                th:if="${asset.status.name() == 'AVAILABLE'}"
+                th:action="@{/loans/request/{id}(id=${asset.assetId})}"
+                method="post">
+
+            <button type="submit">Request Loan</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

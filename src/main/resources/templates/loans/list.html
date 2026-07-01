@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Loan Requests - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+
+    <h2>Loan Requests</h2>
+
+    <table>
+
+        <tr>
+            <th>ID</th>
+            <th>Asset</th>
+            <th>Borrower</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+
+        <tr th:each="loan : ${loans}">
+
+            <td th:text="${loan.loanId}"></td>
+
+            <td th:text="${loan.asset.title}"></td>
+
+            <td th:text="${loan.borrower.name}"></td>
+
+            <td><span class="badge" th:text="${loan.status}"></span></td>
+
+            <td>
+
+                <form
+                        class="inline-form"
+                        th:if="${loan.status.name() == 'PENDING'}"
+                        th:action="@{/loans/approve/{id}(id=${loan.loanId})}"
+                        method="post">
+
+                    <button>Approve</button>
+
+                </form>
+
+                <form
+                        class="inline-form"
+                        th:if="${loan.status.name() == 'PENDING'}"
+                        th:action="@{/loans/reject/{id}(id=${loan.loanId})}"
+                        method="post">
+
+                    <button class="danger">Reject</button>
+
+                </form>
+
+                <form
+                        class="inline-form"
+                        th:if="${loan.status.name() == 'APPROVED'}"
+                        th:action="@{/loans/checkout/{id}(id=${loan.loanId})}"
+                        method="post">
+
+                    <button>Check Out</button>
+
+                </form>
+
+                <form
+                        class="inline-form"
+                        th:if="${loan.status.name() == 'CHECKED_OUT' or loan.status.name() == 'OVERDUE'}"
+                        th:action="@{/loans/return/{id}(id=${loan.loanId})}"
+                        method="post">
+
+                    <button class="secondary">Return</button>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+    </table>
+
+</div>
+
+</body>
+</html>

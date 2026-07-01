@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div class="container" style="max-width: 420px;">
+
+    <div class="card">
+
+        <h2>Register</h2>
+
+        <form
+                th:action="@{/register}"
+                th:object="${registrationRequest}"
+                method="post">
+
+            <label for="name">Name</label>
+            <input id="name" th:field="*{name}" placeholder="Name">
+            <span class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+            <label for="department">Department</label>
+            <input id="department" th:field="*{department}" placeholder="Department">
+            <span class="error-text" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+
+            <label for="email">Email</label>
+            <input id="email" th:field="*{email}" placeholder="Email">
+            <span class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" th:field="*{password}" placeholder="Password">
+            <span class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+
+            <label for="role">Role</label>
+            <select id="role" th:field="*{role}">
+                <option
+                        th:each="role : ${roles}"
+                        th:value="${role}"
+                        th:text="${role}">
+                </option>
+            </select>
+            <span class="error-text" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
+
+            <button type="submit">Register</button>
+
+        </form>
+
+        <p style="margin-top: 1rem;">
+            Already have an account? <a th:href="@{/login}">Login</a>
+        </p>
+
+    </div>
+
+</div>
+
+</body>
+</html>

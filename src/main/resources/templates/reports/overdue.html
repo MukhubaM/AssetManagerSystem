@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Overdue Loans - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+
+    <h2>Overdue Loans</h2>
+
+    <table>
+
+        <tr>
+            <th>Borrower</th>
+            <th>Asset</th>
+            <th>Due Date</th>
+        </tr>
+
+        <tr th:each="loan : ${loans}">
+
+            <td th:text="${loan.borrower.name}"></td>
+            <td th:text="${loan.asset.title}"></td>
+            <td th:text="${loan.dueDate}"></td>
+
+        </tr>
+
+    </table>
+
+    <p th:if="${#lists.isEmpty(loans)}">No overdue loans. 🎉</p>
+
+</div>
+
+</body>
+</html>
+l>

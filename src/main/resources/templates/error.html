@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Error - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+    <div class="card">
+        <h2>Something went wrong</h2>
+        <p th:text="${message}"></p>
+        <a class="btn" th:href="@{/dashboard}">Back to Dashboard</a>
+    </div>
+</div>
+
+</body>
+</html>

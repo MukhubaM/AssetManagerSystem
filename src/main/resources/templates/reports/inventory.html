@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Report - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+
+    <h2>Inventory Report</h2>
+
+    <table>
+
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Status</th>
+        </tr>
+
+        <tr th:each="asset : ${assets}">
+
+            <td th:text="${asset.title}"></td>
+            <td th:text="${asset.category}"></td>
+            <td th:text="${asset.location}"></td>
+            <td><span class="badge" th:text="${asset.status}"></span></td>
+
+        </tr>
+
+    </table>
+
+</div>
+
+</body>
+</html>
