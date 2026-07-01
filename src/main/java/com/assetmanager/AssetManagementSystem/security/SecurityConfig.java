@@ -37,11 +37,15 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**")
                         .permitAll()
 
-                        // Asset management (create/edit/retire)[CRUD] : staff only
+                        //  This is what sets ADMIN apart from MANAGER: managers run day-to-day asset/loan operations, only admins manage the system and its users.
+                        .requestMatchers("/admin/**")
+                        .hasRole("ADMIN")
+
+                        // Asset management (create/edit/retire) : staff only
                         .requestMatchers("/assets/create", "/assets/*/retire", "/assets/*/edit")
                         .hasAnyRole("ADMIN", "MANAGER")
 
-                        // Reports : staff only
+                        // Reports : for staff only
                         .requestMatchers("/assets/report", "/loans/history", "/loans/overdue")
                         .hasAnyRole("ADMIN", "MANAGER")
 
@@ -49,17 +53,15 @@ public class SecurityConfig {
                         .requestMatchers("/loans/approve/**", "/loans/reject/**", "/loans/checkout/**")
                         .hasAnyRole("ADMIN", "MANAGER")
 
-                        // Borrowers request and return
+                        // For borrowers to request and return their own loans
                         .requestMatchers("/loans/request/**", "/loans/return/**", "/loans/my")
                         .hasAnyRole("ADMIN", "MANAGER", "BORROWER")
 
                         // Full loan list : staff only
                         .requestMatchers("/loans")
                         .hasAnyRole("ADMIN", "MANAGER")
-
-                        // Authenticate asset-browsing/search/detail, dashboard and other pages
                         .anyRequest()
-                        .authenticated()
+                        .authenticated()    // Everything else is authenticated
                 )
 
                 .formLogin(login -> login

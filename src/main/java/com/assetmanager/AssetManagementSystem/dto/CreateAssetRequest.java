@@ -10,21 +10,25 @@ import java.time.LocalDate;
 @Data
 public class CreateAssetRequest {
 
-    @NotBlank
+    @NotBlank(message = "Title is required")
     private String title;
 
-    @NotBlank
+    @NotBlank(message = "Category must be stated")
     private String category;
 
-    @NotBlank
+    @NotBlank(message = "Serial number is required")
     private String serialNumber;
 
+    @NotBlank
     private LocalDate acquisitionDate;
 
+    @NotBlank
     private BigDecimal cost;
 
+    @NotBlank
     private String location;
 
+    @NotBlank
     private String condition;
 
     private MultipartFile photo;

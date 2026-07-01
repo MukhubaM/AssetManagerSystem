@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Audit Log - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+
+    <h2>Audit Log</h2>
+
+    <table>
+
+        <tr>
+            <th>Time</th>
+            <th>User ID</th>
+            <th>Entity</th>
+            <th>Entity ID</th>
+            <th>Action</th>
+        </tr>
+
+        <tr th:each="entry : ${logs}">
+
+            <td th:text="${entry.timestamp}"></td>
+            <td th:text="${entry.userId}"></td>
+            <td th:text="${entry.entityType}"></td>
+            <td th:text="${entry.entityId}"></td>
+            <td th:text="${entry.action}"></td>
+
+        </tr>
+
+    </table>
+
+    <p th:if="${#lists.isEmpty(logs)}">No activity recorded yet.</p>
+
+</div>
+
+</body>
+</html>

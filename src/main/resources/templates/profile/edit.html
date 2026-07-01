@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container" style="max-width: 420px;">
+
+    <div class="card">
+
+        <h2>My Profile</h2>
+
+        <p>Email: <strong th:text="${email}"></strong></p>
+        <p>Role: <span class="badge" th:text="${role}"></span></p>
+
+        <p th:if="${success}" style="color:#16a34a;">Profile updated successfully.</p>
+
+        <form
+                th:action="@{/profile}"
+                th:object="${profileRequest}"
+                method="post">
+
+            <label for="name">Name</label>
+            <input id="name" th:field="*{name}" placeholder="Name">
+            <span class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+
+            <label for="department">Department</label>
+            <input id="department" th:field="*{department}" placeholder="Department">
+            <span class="error-text" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+
+            <hr style="margin-top: 1.5rem; border-color: #e4e7eb;">
+
+            <p style="font-size: 0.85rem; color: #52606d; margin-top: 1rem;">
+                Leave the password fields blank to keep your current password.
+            </p>
+
+            <label for="currentPassword">Current Password</label>
+            <input
+                    type="password"
+                    id="currentPassword"
+                    th:field="*{currentPassword}"
+                    placeholder="Required only to set a new password">
+
+            <label for="newPassword">New Password</label>
+            <input
+                    type="password"
+                    id="newPassword"
+                    th:field="*{newPassword}"
+                    placeholder="New password">
+            <span class="error-text" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
+
+            <button type="submit">Save Changes</button>
+
+        </form>
+
+    </div>
+
+</div>
+
+</body>
+</html>

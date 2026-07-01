@@ -7,3 +7,5 @@ public enum Role {
     MANAGER,
     BORROWER
 }
+
+

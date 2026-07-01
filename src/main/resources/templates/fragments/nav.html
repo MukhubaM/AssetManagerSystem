@@ -21,10 +21,15 @@
         <span sec:authorize="hasRole('BORROWER')">
             <a th:href="@{/loans/my}">My Loans</a>
         </span>
+
+        <span sec:authorize="hasRole('ADMIN')">
+            <a th:href="@{/admin/users}">Manage Users</a>
+            <a th:href="@{/admin/audit-logs}">Audit Log</a>
+        </span>
     </div>
 
     <div class="navbar-user">
-        <span sec:authentication="name"></span>
+        <a th:href="@{/profile}" sec:authentication="name"></a>
         <form th:action="@{/logout}" method="post" class="logout-form">
             <button type="submit" class="link-button">Logout</button>
         </form>

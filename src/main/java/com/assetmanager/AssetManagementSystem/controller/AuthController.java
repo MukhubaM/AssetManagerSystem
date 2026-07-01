@@ -1,9 +1,7 @@
 package com.assetmanager.AssetManagementSystem.controller;
 
-
 import com.assetmanager.AssetManagementSystem.dto.RegistrationRequest;
-import com.assetmanager.AssetManagementSystem.entity.Role;
-import com.assetmanager.AssetManagementSystem.service.AuditLogService;
+import com.assetmanager.AssetManagementSystem.service.UserService;
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -17,23 +15,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final AuditLogService.UserService userService;
+    private final UserService userService;
 
     @GetMapping("/login")
     public String loginPage() {
+
         return "login";
     }
 
     @GetMapping("/register")
     public String registerPage(Model model) {
 
-        model.addAttribute(
-                "registrationRequest",
-                new RegistrationRequest());
-
-        model.addAttribute(
-                "roles",
-                Role.values());
+        model.addAttribute("registrationRequest", new RegistrationRequest());
 
         return "register";
     }
@@ -43,15 +36,9 @@ public class AuthController {
             @Valid
             @ModelAttribute
             RegistrationRequest request,
-            BindingResult result,
-            Model model) {
+            BindingResult result) {
 
         if (result.hasErrors()) {
-
-            model.addAttribute(
-                    "roles",
-                    Role.values());
-
             return "register";
         }
 

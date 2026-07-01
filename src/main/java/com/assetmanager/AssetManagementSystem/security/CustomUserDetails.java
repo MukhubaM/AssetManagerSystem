@@ -1,8 +1,10 @@
 package com.assetmanager.AssetManagementSystem.security;
 
 import com.assetmanager.AssetManagementSystem.entity.User;
+
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,9 +19,7 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public List<SimpleGrantedAuthority> getAuthorities() {
 
-        return List.of(
-                new SimpleGrantedAuthority("ROLE_" + user.getRole().name())
-        );
+        return List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole().name()));
     }
 
     @Override
@@ -49,6 +49,6 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return user.isEnabled();
     }
 }
