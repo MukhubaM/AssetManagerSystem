@@ -1,6 +1,7 @@
 package com.assetmanager.AssetManagementSystem.entity;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -29,6 +30,9 @@ public class Asset {
     private LocalDate acquisitionDate;
 
     private BigDecimal cost;
+
+    // This the rental rate, managers must set when adding an item (startup cost)
+    private BigDecimal dailyRate;
 
     private String location;
 

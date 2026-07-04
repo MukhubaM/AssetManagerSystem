@@ -1,2 +1,9 @@
-package com.assetmanager.AssetManagementSystem.dto;public class NotificationPreferencesRequest {
+package com.assetmanager.AssetManagementSystem.dto;
+
+import lombok.Data;
+
+@Data
+public class NotificationPreferencesRequest {
+
+    private boolean emailNotificationsEnabled;
 }

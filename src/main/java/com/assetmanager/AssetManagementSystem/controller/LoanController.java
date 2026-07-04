@@ -1,12 +1,17 @@
 package com.assetmanager.AssetManagementSystem.controller;
 
+import com.assetmanager.AssetManagementSystem.dto.LoanRequestForm;
 import com.assetmanager.AssetManagementSystem.service.LoanService;
+
+import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.security.core.Authentication;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -20,9 +25,17 @@ public class LoanController {
     public String requestLoan(
             @PathVariable
             Long assetId,
+            @Valid @ModelAttribute
+            LoanRequestForm loanRequestForm,
+            BindingResult result,
             Authentication auth) {
 
-        loanService.requestLoan(assetId, auth.getName());
+        if (result.hasErrors()) {
+
+            return "redirect:/assets/" + assetId;
+        }
+
+        loanService.requestLoan(assetId, auth.getName(), loanRequestForm.getDurationDays());
 
         return "redirect:/assets";
     }
@@ -101,7 +114,7 @@ public class LoanController {
     }
 
     private boolean isStaff(Authentication auth) {
-        return auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_MANAGER"));
+
+        return auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN") || a.getAuthority().equals("ROLE_MANAGER"));
     }
 }

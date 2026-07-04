@@ -1,7 +1,9 @@
 package com.assetmanager.AssetManagementSystem.controller;
 
 import com.assetmanager.AssetManagementSystem.service.DashboardService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,7 @@ public class DashboardController {
 
     @GetMapping("/")
     public String root() {
+
         return "redirect:/dashboard";
     }
 

@@ -11,6 +11,15 @@
         <a th:href="@{/dashboard}">Dashboard</a>
         <a th:href="@{/assets}">Assets</a>
 
+        <a th:href="@{/notifications}">
+            Notifications
+            <span
+                    th:if="${unreadNotificationCount != null and unreadNotificationCount > 0}"
+                    class="badge"
+                    th:text="${unreadNotificationCount}">
+            </span>
+        </a>
+
         <span sec:authorize="hasAnyRole('ADMIN','MANAGER')">
             <a th:href="@{/loans}">Loan Requests</a>
             <a th:href="@{/loans/overdue}">Overdue</a>
@@ -18,7 +27,7 @@
             <a th:href="@{/assets/report}">Inventory Report</a>
         </span>
 
-        <span sec:authorize="hasRole('BORROWER')">
+        <span sec:authorize="hasAnyRole('BORROWER','MANAGER')">
             <a th:href="@{/loans/my}">My Loans</a>
         </span>
 
@@ -26,6 +35,8 @@
             <a th:href="@{/admin/users}">Manage Users</a>
             <a th:href="@{/admin/audit-logs}">Audit Log</a>
         </span>
+
+        <a th:href="@{/settings}">Settings</a>
     </div>
 
     <div class="navbar-user">

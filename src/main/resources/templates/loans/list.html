@@ -20,7 +20,10 @@
             <th>ID</th>
             <th>Asset</th>
             <th>Borrower</th>
+            <th>Duration</th>
+            <th>Cost</th>
             <th>Status</th>
+            <th>Payment</th>
             <th>Actions</th>
         </tr>
 
@@ -32,7 +35,22 @@
 
             <td th:text="${loan.borrower.name}"></td>
 
+            <td th:text="${loan.durationDays} + ' day(s)'"></td>
+
+            <td th:text="${loan.totalCost}"></td>
+
             <td><span class="badge" th:text="${loan.status}"></span></td>
+
+            <td>
+                <span
+                        th:if="${loan.payment != null}"
+                        class="badge"
+                        th:text="${loan.payment.status}">
+                </span>
+                <span th:if="${loan.payment == null and loan.status.name() == 'APPROVED'}" style="color:#dc2626;">
+                    Not paid
+                </span>
+            </td>
 
             <td>
 
@@ -58,11 +76,27 @@
 
                 <form
                         class="inline-form"
-                        th:if="${loan.status.name() == 'APPROVED'}"
+                        th:if="${loan.status.name() == 'APPROVED' and loan.payment != null and loan.payment.status.name() == 'COMPLETED'}"
                         th:action="@{/loans/checkout/{id}(id=${loan.loanId})}"
                         method="post">
 
                     <button>Check Out</button>
+
+                </form>
+
+                <span
+                        th:if="${loan.status.name() == 'APPROVED' and (loan.payment == null or loan.payment.status.name() != 'COMPLETED')}"
+                        style="font-size:0.8rem; color:#52606d;">
+                    Awaiting payment
+                </span>
+
+                <form
+                        class="inline-form"
+                        th:if="${loan.status.name() == 'APPROVED' and loan.payment != null}"
+                        th:action="@{/payments/{id}/rollback(id=${loan.payment.paymentId})}"
+                        method="post">
+
+                    <button class="danger">Rollback Payment</button>
 
                 </form>
 

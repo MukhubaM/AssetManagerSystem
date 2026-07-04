@@ -14,4 +14,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByRole(Role role);
 
     List<User> findAllByOrderByNameAsc();
+
+
+    List<User> findByRoleInAndEnabledTrue(List<Role> roles);
+
+
+    // Used by the "forgot username/email" recovery flow, a borrower/manager proves their identity with employee number + ID number rather than an email they may have forgotten
+    Optional<User> findByEmployeeNumberAndIdNumber(String employeeNumber, String idNumber);
 }

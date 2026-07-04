@@ -8,39 +8,31 @@ import com.assetmanager.AssetManagementSystem.repository.AssetRepository;
 import com.assetmanager.AssetManagementSystem.security.CurrentUserProvider;
 import com.assetmanager.AssetManagementSystem.service.AssetService;
 import com.assetmanager.AssetManagementSystem.service.AuditLogService;
+import com.assetmanager.AssetManagementSystem.service.FileStorageService;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AssetServiceImpl implements AssetService {
+
+    private static final String PHOTO_SUBDIRECTORY = "assets";
 
     private final AssetRepository assetRepository;
     private final AuditLogService auditLogService;
     private final CurrentUserProvider currentUserProvider;
-
-    @Value("${upload.directory}")
-    private String uploadDirectory;
+    private final FileStorageService fileStorageService;
 
     @Override
     @Transactional
     public Asset createAsset(CreateAssetRequest request) {
 
-        String photoPath = savePhoto(request.getPhoto());
+        String photoPath = fileStorageService.store(request.getPhoto(), PHOTO_SUBDIRECTORY);
 
         Asset asset = Asset.builder()
                 .title(request.getTitle())
@@ -48,6 +40,7 @@ public class AssetServiceImpl implements AssetService {
                 .serialNumber(request.getSerialNumber())
                 .acquisitionDate(request.getAcquisitionDate())
                 .cost(request.getCost())
+                .dailyRate(request.getDailyRate())
                 .location(request.getLocation())
                 .condition(request.getCondition())
                 .photoPath(photoPath)
@@ -71,12 +64,14 @@ public class AssetServiceImpl implements AssetService {
         asset.setSerialNumber(request.getSerialNumber());
         asset.setAcquisitionDate(request.getAcquisitionDate());
         asset.setCost(request.getCost());
+        asset.setDailyRate(request.getDailyRate());
         asset.setLocation(request.getLocation());
         asset.setCondition(request.getCondition());
 
-        // Only replace the photo if a new one was uploaded, otherwise keeps the existing one
+        // Only replace the photo if a new one was actually uploaded, otherwise keep the existing one
         if (request.getPhoto() != null && !request.getPhoto().isEmpty()) {
-            asset.setPhotoPath(savePhoto(request.getPhoto()));
+
+            asset.setPhotoPath(fileStorageService.store(request.getPhoto(), PHOTO_SUBDIRECTORY));
         }
 
         Asset updatedAsset = assetRepository.save(asset);
@@ -99,40 +94,18 @@ public class AssetServiceImpl implements AssetService {
     @Override
     public Asset getAsset(Long id) {
 
-        return assetRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Asset not found: " + id));
+        return assetRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Asset not found: " + id));
     }
 
     @Override
     public List<Asset> getAllAssets() {
+
         return assetRepository.findAll();
     }
 
     @Override
     public List<Asset> searchByTitle(String title) {
+
         return assetRepository.findByTitleContainingIgnoreCase(title);
-    }
-
-    private String savePhoto(org.springframework.web.multipart.MultipartFile photo) {
-
-        try {
-            if (photo == null || photo.isEmpty()) {
-                return null;
-            }
-
-            Files.createDirectories(Paths.get(uploadDirectory));
-
-            String originalFilename = photo.getOriginalFilename() == null ? "upload" : photo.getOriginalFilename();
-            String fileName = UUID.randomUUID() + "_" + originalFilename;
-
-            Path path = Paths.get(uploadDirectory, fileName);
-            Files.copy(photo.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-            return fileName;
-
-        } catch (IOException e) {
-            log.error("Failed to store uploaded photo", e);
-            throw new RuntimeException("Photo upload failed", e);
-        }
     }
 }

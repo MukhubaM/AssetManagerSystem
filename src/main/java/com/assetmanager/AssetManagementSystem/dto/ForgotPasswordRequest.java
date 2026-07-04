@@ -1,2 +1,14 @@
-package com.assetmanager.AssetManagementSystem.dto;public class ForgotPasswordRequest {
+package com.assetmanager.AssetManagementSystem.dto;
+
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+@Data
+public class ForgotPasswordRequest {
+
+    @Email
+    @NotBlank
+    private String email;
 }

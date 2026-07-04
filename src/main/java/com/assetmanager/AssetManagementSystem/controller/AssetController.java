@@ -3,6 +3,7 @@ package com.assetmanager.AssetManagementSystem.controller;
 import com.assetmanager.AssetManagementSystem.dto.CreateAssetRequest;
 import com.assetmanager.AssetManagementSystem.entity.Asset;
 import com.assetmanager.AssetManagementSystem.service.AssetService;
+
 import jakarta.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -76,6 +77,7 @@ public class AssetController {
         request.setSerialNumber(asset.getSerialNumber());
         request.setAcquisitionDate(asset.getAcquisitionDate());
         request.setCost(asset.getCost());
+        request.setDailyRate(asset.getDailyRate());
         request.setLocation(asset.getLocation());
         request.setCondition(asset.getCondition());
 
@@ -97,6 +99,7 @@ public class AssetController {
 
         if (result.hasErrors()) {
             model.addAttribute("assetId", id);
+
             return "assets/edit";
         }
 

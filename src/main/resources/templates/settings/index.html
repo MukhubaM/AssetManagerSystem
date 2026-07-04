@@ -1,10 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Settings - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-$END$
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container" style="max-width: 480px;">
+
+    <h2>Settings</h2>
+
+    <div class="card">
+
+        <h3>Profile</h3>
+
+        <p style="font-size:0.9rem; color:#52606d;">
+            Update your name, contact details, password, or profile picture.
+        </p>
+
+        <a class="btn" th:href="@{/profile}">Edit Profile</a>
+
+    </div>
+
+    <div class="card">
+
+        <h3>Notifications</h3>
+
+        <p th:if="${success}" style="color:#16a34a;">Preferences saved.</p>
+
+        <form
+                th:action="@{/settings/notifications}"
+                th:object="${preferences}"
+                method="post">
+
+            <label>
+                <input
+                        type="checkbox"
+                        th:field="*{emailNotificationsEnabled}"
+                        style="width:auto; display:inline-block;">
+                Also email me for important notifications (overdue loans, upcoming due
+                dates, account/security alerts)
+            </label>
+
+            <p style="font-size:0.8rem; color:#52606d;">
+                In-app notifications are always shown regardless of this setting.
+            </p>
+
+            <button type="submit">Save Preferences</button>
+
+        </form>
+
+    </div>
+
+    <div class="card" th:if="${user != null and user.role.name() != 'ADMIN'}">
+
+        <h3 style="color:#dc2626;">Danger Zone</h3>
+
+        <p style="font-size:0.9rem; color:#52606d;">
+            Deleting your account disables it and removes your personal details. Your
+            loan and payment history is kept for record-keeping.
+        </p>
+
+        <a class="btn danger" th:href="@{/settings/delete-account}">Delete My Account</a>
+
+    </div>
+
+</div>
+
 </body>
 </html>

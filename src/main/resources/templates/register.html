@@ -8,37 +8,192 @@
 
 <body>
 
-<div class="container" style="max-width: 420px;">
+<div class="container" style="max-width: 520px;">
 
     <div class="card">
 
-        <h2>Register</h2>
+        <h2>User Registration</h2>
 
         <p style="color:#52606d; font-size:0.9rem;">
-            New accounts are created as Borrower. If you need Manager or Admin
-            access, ask an administrator to promote your account after you register.
+            Register as a Borrower to request and return assets, or a Manager to
+            approve loans and manage assets. Admin access is granted separately
+            by an existing administrator.
         </p>
 
         <form
                 th:action="@{/register}"
                 th:object="${registrationRequest}"
-                method="post">
+                method="post"
+                enctype="multipart/form-data"
+                id="registerForm">
 
-            <label for="name">Name</label>
-            <input id="name" th:field="*{name}" placeholder="Name">
+            <h3>Personal Information</h3>
+
+            <label for="name">Full Name</label>
+            <input id="name" th:field="*{name}" placeholder="Full name">
             <span class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
 
-            <label for="department">Department</label>
-            <input id="department" th:field="*{department}" placeholder="Department">
-            <span class="error-text" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+            <label for="gender">Gender</label>
+            <select id="gender" th:field="*{gender}">
+                <option value="">Select gender</option>
+                <option
+                        th:each="g : ${genders}"
+                        th:value="${g}"
+                        th:text="${g}">
+                </option>
+            </select>
+            <span class="error-text" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></span>
 
-            <label for="email">Email</label>
+            <label for="dateOfBirth">Date of Birth</label>
+            <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}">
+            <span class="error-text" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
+
+            <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+            <h3>Contact Information</h3>
+
+            <label for="email">Email (this will also be your username)</label>
             <input id="email" th:field="*{email}" placeholder="Email">
             <span class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+
+            <label for="phone">Phone Number</label>
+            <input id="phone" th:field="*{phone}" placeholder="Phone number">
+            <span class="error-text" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></span>
+
+            <label for="address">Address</label>
+            <input id="address" th:field="*{address}" placeholder="Address">
+            <span class="error-text" th:if="${#fields.hasErrors('address')}" th:errors="*{address}"></span>
+
+            <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+            <h3>Employment Information</h3>
+
+            <label for="employeeNumber">Employee Number</label>
+            <input id="employeeNumber" th:field="*{employeeNumber}" placeholder="Employee number">
+            <span class="error-text" th:if="${#fields.hasErrors('employeeNumber')}" th:errors="*{employeeNumber}"></span>
+
+            <label for="idNumber">ID Number</label>
+            <input id="idNumber" th:field="*{idNumber}" placeholder="ID number">
+            <span class="error-text" th:if="${#fields.hasErrors('idNumber')}" th:errors="*{idNumber}"></span>
+
+            <label for="department">Department</label>
+            <select id="department" th:field="*{department}">
+                <option value="">Select department</option>
+                <option
+                        th:each="d : ${departments}"
+                        th:value="${d}"
+                        th:text="${d}">
+                </option>
+            </select>
+            <span class="error-text" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+
+            <label for="position">Position</label>
+            <input id="position" th:field="*{position}" placeholder="Position">
+            <span class="error-text" th:if="${#fields.hasErrors('position')}" th:errors="*{position}"></span>
+
+            <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+            <h3>Account Information</h3>
 
             <label for="password">Password</label>
             <input type="password" id="password" th:field="*{password}" placeholder="Password">
             <span class="error-text" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" th:field="*{confirmPassword}" placeholder="Confirm password">
+            <span
+                    class="error-text"
+                    th:if="${#fields.hasErrors('passwordConfirmed')}"
+                    th:errors="*{passwordConfirmed}">
+            </span>
+
+            <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+            <h3>Role</h3>
+
+            <div th:each="r : ${roles}" style="margin-top:0.5rem;">
+                <input
+                        type="radio"
+                        th:field="*{role}"
+                        th:value="${r}"
+                        class="role-radio"
+                        style="width:auto; display:inline-block;">
+                <label th:for="${#ids.prev('role')}" th:text="${r}" style="display:inline; margin:0;"></label>
+            </div>
+            <span class="error-text" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></span>
+
+            <div id="borrowerSection" style="display:none;">
+
+                <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+                <h3>Borrower Details</h3>
+
+                <label for="borrowerStatus">Borrower Status</label>
+                <select id="borrowerStatus" th:field="*{borrowerStatus}" disabled>
+                    <option value="ACTIVE">Active</option>
+                </select>
+
+                <label for="supervisorId">Supervisor</label>
+                <select id="supervisorId" th:field="*{supervisorId}">
+                    <option value="">Select supervisor</option>
+                    <option
+                            th:each="s : ${supervisors}"
+                            th:value="${s.userId}"
+                            th:text="${s.name} + ' (' + ${s.role} + ')'">
+                    </option>
+                </select>
+            </div>
+
+            <div id="managerSection" style="display:none;">
+
+                <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+                <h3>Manager Details</h3>
+
+                <label for="managerLevel">Manager Level</label>
+                <select id="managerLevel" th:field="*{managerLevel}">
+                    <option
+                            th:each="m : ${managerLevels}"
+                            th:value="${m}"
+                            th:text="${m}">
+                    </option>
+                </select>
+
+                <label style="margin-top:1rem;">
+                    <input type="checkbox" th:field="*{canApproveLoans}" style="width:auto; display:inline-block;">
+                    Approve Loans
+                </label>
+
+                <label>
+                    <input type="checkbox" th:field="*{canRegisterAssets}" style="width:auto; display:inline-block;">
+                    Register Assets
+                </label>
+
+                <label>
+                    <input type="checkbox" th:field="*{canManageUsers}" style="width:auto; display:inline-block;">
+                    Manage Users
+                </label>
+
+                <label>
+                    <input type="checkbox" th:field="*{canGenerateReports}" style="width:auto; display:inline-block;">
+                    Generate Reports
+                </label>
+
+                <p style="font-size:0.8rem; color:#52606d;">
+                    These reflect your intended responsibilities. Actual system access is
+                    determined by your role, as set or changed by an administrator.
+                </p>
+            </div>
+
+            <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+
+            <hr style="margin-top:1.5rem; border-color:#e4e7eb;">
+
+            <label for="document">Supporting Document (optional)</label>
+            <input type="file" id="document" th:field="*{document}">
+            <p style="font-size:0.8rem; color:#52606d;">
+                E.g. proof of employment. Just stored on file - no verification is performed.
+            </p>
+
+            <label style="margin-top:1rem;">
+                <input type="checkbox" th:field="*{termsAccepted}" style="width:auto; display:inline-block;">
+                I agree to the Terms and Conditions
+            </label>
+            <span class="error-text" th:if="${#fields.hasErrors('termsAccepted')}" th:errors="*{termsAccepted}"></span>
 
             <button type="submit">Register</button>
 
@@ -51,6 +206,33 @@
     </div>
 
 </div>
+
+<script th:inline="javascript">
+    function toggleRoleSections() {
+        var checked = document.querySelector('input[name="role"]:checked');
+        var borrowerSection = document.getElementById('borrowerSection');
+        var managerSection = document.getElementById('managerSection');
+
+        borrowerSection.style.display = 'none';
+        managerSection.style.display = 'none';
+
+        if (checked) {
+            if (checked.value === 'BORROWER') {
+                borrowerSection.style.display = 'block';
+            } else if (checked.value === 'MANAGER') {
+                managerSection.style.display = 'block';
+            }
+        }
+    }
+
+    document.querySelectorAll('.role-radio').forEach(function (radio) {
+        radio.addEventListener('change', toggleRoleSections);
+    });
+
+    // Re-apply on load in case the form is redisplayed after a validation error
+    // with a role already selected.
+    toggleRoleSections();
+</script>
 
 </body>
 </html>

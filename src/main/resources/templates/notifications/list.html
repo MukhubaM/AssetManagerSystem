@@ -1,10 +1,61 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>$Title$</title>
+  <title>Notifications - Asset Manager</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-$END$
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container">
+
+  <h2>Notifications</h2>
+
+  <form th:action="@{/notifications/read-all}" method="post">
+    <button type="submit" class="secondary">Mark All as Read</button>
+  </form>
+
+  <table>
+
+    <tr>
+      <th>Status</th>
+      <th>Title</th>
+      <th>Message</th>
+      <th>When</th>
+      <th></th>
+    </tr>
+
+    <tr th:each="n : ${notifications}" th:style="${n.read} ? 'opacity:0.6;' : ''">
+
+      <td>
+        <span class="badge" th:text="${n.read} ? 'Read' : 'New'"> </span>
+      </td>
+
+      <td th:text="${n.title}"></td>
+      <td th:text="${n.message}"></td>
+      <td th:text="${n.createdAt}"></td>
+
+      <td>
+        <form
+                th:unless="${n.read}"
+                th:action="@{/notifications/{id}/read(id=${n.notificationId})}"
+                method="post">
+
+          <button type="submit" style="margin-top:0;">Mark Read</button>
+
+        </form>
+      </td>
+
+    </tr>
+
+  </table>
+
+  <p th:if="${#lists.isEmpty(notifications)}">You have no notifications.</p>
+
+</div>
+
 </body>
 </html>

@@ -16,6 +16,11 @@
 
         <p class="error-text" th:if="${param.error}">Invalid email or password.</p>
         <p th:if="${param.logout}">You have been logged out.</p>
+        <p th:if="${param.passwordReset}" style="color:#16a34a;">Your password has been reset. Please log in.</p>
+        <p th:if="${param.emailChanged}" style="color:#16a34a;">Your email was updated. Please log in with your new email.</p>
+        <p th:if="${param.passwordChanged}" style="color:#16a34a;">Your password was updated. Please log in again.</p>
+        <p th:if="${param.registered}" style="color:#16a34a;">Account created. Please log in.</p>
+        <p th:if="${param.accountDeleted}" style="color:#16a34a;">Your account has been deleted.</p>
 
         <form th:action="@{/login}" method="post">
 
@@ -28,6 +33,12 @@
             <button type="submit">Login</button>
 
         </form>
+
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            <a th:href="@{/forgot-password}">Forgot password?</a>
+            &nbsp;|&nbsp;
+            <a th:href="@{/forgot-username}">Forgot username?</a>
+        </p>
 
         <p style="margin-top: 1rem;">
             No account? <a th:href="@{/register}">Register</a>

@@ -6,7 +6,8 @@ import java.util.List;
 
 public interface LoanService {
 
-    Loan requestLoan(Long assetId, String email);
+    // Shows how many days the borrower wants the asset for, used with the asset's dailyRate to calculate loan total cost
+    Loan requestLoan(Long assetId, String email, Integer durationDays);
 
     Loan approveLoan(Long loanId);
 
@@ -22,5 +23,9 @@ public interface LoanService {
 
     List<Loan> getOverdueLoans();
 
+    // Sweeps all checked-out loans and flags any whose due date has passed as OVERDUE
     void updateOverdueLoans();
+
+    //This Sweeps checked-out loans due within the next 48 hours
+    void sendDueSoonWarnings();
 }

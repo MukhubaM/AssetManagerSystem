@@ -1,7 +1,11 @@
 package com.assetmanager.AssetManagementSystem.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import lombok.Data;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -10,25 +14,25 @@ import java.time.LocalDate;
 @Data
 public class CreateAssetRequest {
 
-    @NotBlank(message = "Title is required")
+    @NotBlank
     private String title;
 
-    @NotBlank(message = "Category must be stated")
+    @NotBlank
     private String category;
 
-    @NotBlank(message = "Serial number is required")
+    @NotBlank
     private String serialNumber;
 
-    @NotBlank
     private LocalDate acquisitionDate;
 
-    @NotBlank
     private BigDecimal cost;
 
-    @NotBlank
+    @NotNull(message = "Daily rate is required")
+    @DecimalMin(value = "0.01", message = "Daily rate must be greater than zero")
+    private BigDecimal dailyRate;
+
     private String location;
 
-    @NotBlank
     private String condition;
 
     private MultipartFile photo;

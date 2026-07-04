@@ -37,8 +37,12 @@
       <label for="acquisitionDate">Acquisition Date</label>
       <input type="date" id="acquisitionDate" th:field="*{acquisitionDate}">
 
-      <label for="cost">Cost</label>
+      <label for="cost">Cost (acquisition price)</label>
       <input type="number" step="0.01" id="cost" th:field="*{cost}">
+
+      <label for="dailyRate">Daily Rate (rental cost per day)</label>
+      <input type="number" step="0.01" id="dailyRate" th:field="*{dailyRate}" placeholder="e.g. 10.00">
+      <span class="error-text" th:if="${#fields.hasErrors('dailyRate')}" th:errors="*{dailyRate}"></span>
 
       <label for="location">Location</label>
       <input id="location" th:field="*{location}" placeholder="Location">

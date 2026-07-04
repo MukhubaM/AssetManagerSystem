@@ -21,6 +21,11 @@
         <p>Location: <span th:text="${asset.location}"></span></p>
         <p>Condition: <span th:text="${asset.condition}"></span></p>
         <p>Status: <span class="badge" th:text="${asset.status}"></span></p>
+        <p>
+            Daily Rate:
+            <strong th:if="${asset.dailyRate != null}" th:text="${asset.dailyRate}"></strong>
+            <span th:if="${asset.dailyRate == null}" style="color:#dc2626;">Not set</span>
+        </p>
 
         <img
                 th:if="${asset.photoPath != null}"
@@ -44,19 +49,57 @@
 
         </div>
 
-        <form
+        <div
                 sec:authorize="hasAnyRole('ADMIN','MANAGER','BORROWER')"
-                th:if="${asset.status.name() == 'AVAILABLE'}"
-                th:action="@{/loans/request/{id}(id=${asset.assetId})}"
-                method="post">
+                th:if="${asset.status.name() == 'AVAILABLE' and asset.dailyRate != null}">
 
-            <button type="submit">Request Loan</button>
+            <h3 style="margin-top:1.5rem;">Request This Item</h3>
 
-        </form>
+            <form
+                    th:action="@{/loans/request/{id}(id=${asset.assetId})}"
+                    method="post"
+                    id="loanRequestForm">
+
+                <label for="durationDays">Duration (days)</label>
+                <input
+                        type="number"
+                        id="durationDays"
+                        name="durationDays"
+                        min="1"
+                        max="365"
+                        value="1"
+                        th:attr="data-daily-rate=${asset.dailyRate}"
+                        oninput="updateEstimatedCost()">
+
+                <p style="font-size:0.9rem; color:#52606d;">
+                    Estimated cost: <strong id="estimatedCost" th:text="${asset.dailyRate}"></strong>
+                </p>
+
+                <button type="submit">Request Loan</button>
+
+            </form>
+
+        </div>
+
+        <p
+                sec:authorize="hasAnyRole('ADMIN','MANAGER','BORROWER')"
+                th:if="${asset.status.name() == 'AVAILABLE' and asset.dailyRate == null}"
+                style="color:#dc2626;">
+            This item can't be requested yet - it has no daily rate set.
+        </p>
 
     </div>
 
 </div>
+
+<script th:inline="javascript">
+    function updateEstimatedCost() {
+        var input = document.getElementById('durationDays');
+        var dailyRate = parseFloat(input.getAttribute('data-daily-rate'));
+        var days = parseInt(input.value, 10) || 0;
+        document.getElementById('estimatedCost').textContent = (dailyRate * days).toFixed(2);
+    }
+</script>
 
 </body>
 </html>

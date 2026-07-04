@@ -19,8 +19,11 @@
         <tr>
             <th>Asset</th>
             <th>Requested</th>
+            <th>Duration</th>
+            <th>Cost</th>
             <th>Due</th>
             <th>Status</th>
+            <th>Payment</th>
             <th>Actions</th>
         </tr>
 
@@ -30,11 +33,43 @@
 
             <td th:text="${loan.requestDate}"></td>
 
+            <td th:text="${loan.durationDays} + ' day(s)'"></td>
+
+            <td th:text="${loan.totalCost}"></td>
+
             <td th:text="${loan.dueDate}"></td>
 
             <td><span class="badge" th:text="${loan.status}"></span></td>
 
             <td>
+                <span
+                        th:if="${loan.payment != null}"
+                        class="badge"
+                        th:text="${loan.payment.status}">
+                </span>
+                <span th:if="${loan.payment == null and loan.status.name() == 'APPROVED'}" style="color:#dc2626;">
+                    Not paid
+                </span>
+            </td>
+
+            <td>
+
+                <form
+                        th:if="${loan.status.name() == 'APPROVED' and loan.payment == null}"
+                        th:action="@{/payments/initiate/{id}(id=${loan.loanId})}"
+                        method="post">
+
+                    <button type="submit">Pay Now</button>
+
+                </form>
+
+                <a
+                        th:if="${loan.payment != null and loan.payment.status.name() == 'PENDING'}"
+                        class="btn"
+                        th:href="@{/payments/{id}(id=${loan.payment.paymentId})}">
+                    Complete Payment
+                </a>
+
                 <form
                         th:if="${loan.status.name() == 'CHECKED_OUT' or loan.status.name() == 'OVERDUE'}"
                         th:action="@{/loans/return/{id}(id=${loan.loanId})}"

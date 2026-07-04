@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Forgot Username - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-$END$
+
+<div class="container" style="max-width: 380px;">
+
+    <div class="card">
+
+        <h2>Forgot Username</h2>
+
+        <div th:if="${submitted}">
+            <p style="color:#16a34a;">
+                If those details match an account, we've emailed that account's username (your login email) to it.
+            </p>
+            <a class="btn" th:href="@{/login}">Back to Login</a>
+        </div>
+
+        <form th:unless="${submitted}"
+              th:action="@{/forgot-username}"
+              th:object="${forgotUsernameRequest}"
+              method="post">
+
+            <p style="color:#52606d; font-size:0.9rem;">
+                Your username is your login email. Enter your Employee Number and ID Number
+                and we'll email it to you.
+            </p>
+
+            <label for="employeeNumber">Employee Number</label>
+            <input id="employeeNumber" th:field="*{employeeNumber}" placeholder="Employee number">
+            <span class="error-text" th:if="${#fields.hasErrors('employeeNumber')}" th:errors="*{employeeNumber}"></span>
+
+            <label for="idNumber">ID Number</label>
+            <input id="idNumber" th:field="*{idNumber}" placeholder="ID number">
+            <span class="error-text" th:if="${#fields.hasErrors('idNumber')}" th:errors="*{idNumber}"></span>
+
+            <button type="submit">Send Username</button>
+
+        </form>
+
+        <p style="margin-top: 1rem;">
+            <a th:href="@{/login}">Back to Login</a>
+        </p>
+
+    </div>
+
+</div>
+
 </body>
 </html>

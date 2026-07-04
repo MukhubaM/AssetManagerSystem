@@ -1,10 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
+    <meta charset="UTF-8">
+    <title>Payment - Asset Manager</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
+
 <body>
-$END$
+
+<div th:replace="~{fragments/nav :: nav}"></div>
+
+<div class="container" style="max-width: 420px;">
+
+    <div class="card">
+
+        <h2>Payment</h2>
+
+        <p>Item: <strong th:text="${payment.loan.asset.title}"></strong></p>
+        <p>Duration: <strong th:text="${payment.loan.durationDays} + ' day(s)'"></strong></p>
+        <p>Amount: <strong th:text="${payment.amount}"></strong></p>
+        <p>Status: <span class="badge" th:text="${payment.status}"></span></p>
+
+        <p style="font-size:0.8rem; color:#52606d;">
+            This is a mock payment - no real payment processor is involved. Confirming
+            simply marks this transaction as completed so the loan can be checked out.
+        </p>
+
+        <form
+                th:if="${payment.status.name() == 'PENDING'}"
+                th:action="@{/payments/{id}/confirm(id=${payment.paymentId})}"
+                method="post">
+
+            <button type="submit">Confirm Payment</button>
+
+        </form>
+
+        <form
+                th:if="${payment.status.name() == 'PENDING'}"
+                th:action="@{/payments/{id}/rollback(id=${payment.paymentId})}"
+                method="post">
+
+            <button type="submit" class="danger">Cancel Payment</button>
+
+        </form>
+
+        <form
+                sec:authorize="hasAnyRole('ADMIN','MANAGER')"
+                th:if="${payment.status.name() == 'COMPLETED'}"
+                th:action="@{/payments/{id}/rollback(id=${payment.paymentId})}"
+                method="post">
+
+            <button type="submit" class="danger">Rollback Payment</button>
+
+        </form>
+
+        <p th:if="${payment.status.name() == 'COMPLETED'}" style="color:#16a34a;">
+            Payment complete - a manager can now check this loan out.
+        </p>
+
+    </div>
+
+</div>
+
 </body>
 </html>

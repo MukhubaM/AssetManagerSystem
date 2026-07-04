@@ -12,7 +12,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 
-// This runs once at startup and creates a single bootstrap admin only if no ADMIN exists yet
+// This runs once at startup and creates a single bootstrap admin only if no ADMIN exists(1st user)
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -37,6 +37,7 @@ public class AdminBootstrapRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
 
         if (userRepository.existsByRole(Role.ADMIN)) {
+
             return;
         }
 

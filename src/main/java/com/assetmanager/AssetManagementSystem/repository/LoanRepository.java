@@ -16,4 +16,7 @@ public interface LoanRepository extends JpaRepository<Loan, Long> {
     long countByBorrowerAndStatus(User borrower, LoanStatus status);
 
     long countByStatus(LoanStatus status);
+
+    // Used by the 48-hour before-due warning sweep (only loans that are currently checked out and haven't already been warned)
+    List<Loan> findByStatusAndDueSoonNotifiedFalse(LoanStatus status);
 }

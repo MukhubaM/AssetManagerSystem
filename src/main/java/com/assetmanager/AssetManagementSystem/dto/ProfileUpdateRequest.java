@@ -1,26 +1,45 @@
 package com.assetmanager.AssetManagementSystem.dto;
 
+import com.assetmanager.AssetManagementSystem.entity.Gender;
+
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
+
 import lombok.Data;
 
+import java.time.LocalDate;
 
+// This lets any authenticated user (ADMIN, MANAGER or BORROWER) edit their own details
 @Data
 public class ProfileUpdateRequest {
 
-    @NotBlank(message = "Name is required")
+    @NotBlank
     private String name;
 
-    @NotBlank(message = "Department must be specified")
-    private String department;
+    @Email
+    @NotBlank
+    private String email;
 
+    private String phone;
 
-    // Required only if newPassword is supplied, then verified against the current password hash before any change is applied
+    private String address;
+
+    private Gender gender;
+
+    @Past(message = "Date of birth must be in the past")
+    private LocalDate dateOfBirth;
+
+    private String position;
+
+    // Optional
+    private org.springframework.web.multipart.MultipartFile profilePicture;
+
+    // Required only if email or newPassword is being changed
     private String currentPassword;
 
-    // Optional, Leave blank to keep the existing password
-    @Size(min = 8, max = 100, message = "Password must be at least 8 characters")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$", message = "Password must contain uppercase, lowercase, digit and special character")
+
+    @Size(min = 0, max = 100)
     private String newPassword;
 }

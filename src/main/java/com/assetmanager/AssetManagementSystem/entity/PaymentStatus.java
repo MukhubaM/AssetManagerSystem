@@ -1,2 +1,7 @@
-package com.assetmanager.AssetManagementSystem.entity;public enum PaymentStatus {
+package com.assetmanager.AssetManagementSystem.entity;
+
+public enum PaymentStatus {
+
+    PENDING,
+    COMPLETED
 }
