@@ -4,10 +4,8 @@ import com.assetmanager.AssetManagementSystem.entity.BorrowerStatus;
 import com.assetmanager.AssetManagementSystem.entity.Gender;
 import com.assetmanager.AssetManagementSystem.entity.ManagerLevel;
 import com.assetmanager.AssetManagementSystem.entity.Role;
-
 import jakarta.validation.constraints.*;
-
-import lombok.Data;
+        import lombok.Data;
 
 import java.time.LocalDate;
 
@@ -75,8 +73,6 @@ public class RegistrationRequest {
     // For Borrower
     // Always forced to ACTIVE by the service
     private BorrowerStatus borrowerStatus = BorrowerStatus.ACTIVE;
-
-    private Long supervisorId;
 
 
     // For Manager

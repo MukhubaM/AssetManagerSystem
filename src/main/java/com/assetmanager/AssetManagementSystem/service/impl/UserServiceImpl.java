@@ -3,16 +3,14 @@ package com.assetmanager.AssetManagementSystem.service.impl;
 import com.assetmanager.AssetManagementSystem.dto.ProfileUpdateRequest;
 import com.assetmanager.AssetManagementSystem.dto.RegistrationRequest;
 import com.assetmanager.AssetManagementSystem.entity.*;
-import com.assetmanager.AssetManagementSystem.exception.BusinessRuleException;
+        import com.assetmanager.AssetManagementSystem.exception.BusinessRuleException;
 import com.assetmanager.AssetManagementSystem.exception.ResourceNotFoundException;
 import com.assetmanager.AssetManagementSystem.repository.UserRepository;
 import com.assetmanager.AssetManagementSystem.security.CurrentUserProvider;
 import com.assetmanager.AssetManagementSystem.service.AuditLogService;
 import com.assetmanager.AssetManagementSystem.service.FileStorageService;
 import com.assetmanager.AssetManagementSystem.service.UserService;
-
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,6 +53,11 @@ public class UserServiceImpl implements UserService {
 
         String documentPath = fileStorageService.store(request.getDocument(), DOCUMENT_SUBDIRECTORY);
 
+        User adminSupervisor = userRepository.findByRoleAndEnabledTrue(Role.ADMIN)
+                .stream()
+                .findFirst()
+                .orElse(null);
+
         User.UserBuilder builder = User.builder()
                 .name(request.getName())
                 .gender(request.getGender())
@@ -69,16 +72,13 @@ public class UserServiceImpl implements UserService {
                 .role(request.getRole())
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .enabled(true)
-                .documentPath(documentPath);
+                .documentPath(documentPath)
+                .supervisor(adminSupervisor);
 
         if (request.getRole() == Role.BORROWER) {
 
-            User supervisor = userRepository.findById(request.getSupervisorId())
-                    .filter(candidate -> candidate.getRole() == Role.MANAGER || candidate.getRole() == Role.ADMIN)
-                    .orElseThrow(() -> new BusinessRuleException("Please select a valid supervisor"));
-
-            // Always ACTIVE from registration
-            builder.borrowerStatus(BorrowerStatus.ACTIVE).supervisor(supervisor);
+            // Always ACTIVE
+            builder.borrowerStatus(BorrowerStatus.ACTIVE);
 
         } else if (request.getRole() == Role.MANAGER) {
 
@@ -110,7 +110,7 @@ public class UserServiceImpl implements UserService {
                 .role(role)
                 .passwordHash(passwordEncoder.encode(rawPassword))
                 .enabled(true)
-                .employeeNumber("SYSTEM")                    // This method is only used for system-generated accounts
+                .employeeNumber("SYSTEM")
                 .idNumber("N/A")
                 .build();
 
@@ -122,14 +122,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-
         return userRepository.findAllByOrderByNameAsc();
-    }
-
-    @Override
-    public List<User> getPotentialSupervisors() {
-
-        return userRepository.findByRoleInAndEnabledTrue(List.of(Role.MANAGER, Role.ADMIN));
     }
 
     @Override
@@ -164,7 +157,8 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(enabled);
         User updatedUser = userRepository.save(user);
 
-        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(), enabled ? "ENABLE" : "DISABLE");
+        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(),
+                enabled ? "ENABLE" : "DISABLE");
 
         return updatedUser;
     }
@@ -173,9 +167,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateProfile(String currentEmail, ProfileUpdateRequest request) {
 
-        User user = userRepository.findByEmail(currentEmail).orElseThrow(() -> new ResourceNotFoundException("User not found: " + currentEmail));
+        User user = userRepository.findByEmail(currentEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + currentEmail));
 
-        boolean emailChanging = request.getEmail() != null && !request.getEmail().equalsIgnoreCase(user.getEmail());
+        boolean emailChanging = request.getEmail() != null
+                && !request.getEmail().equalsIgnoreCase(user.getEmail());
         boolean passwordChanging = request.getNewPassword() != null && !request.getNewPassword().isBlank();
 
         if (emailChanging || passwordChanging) {
@@ -226,12 +222,14 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateNotificationPreference(String email, boolean emailNotificationsEnabled) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
 
         user.setEmailNotificationsEnabled(emailNotificationsEnabled);
         User updatedUser = userRepository.save(user);
 
-        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(), "NOTIFICATION_PREFS_UPDATE");
+        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(),
+                "NOTIFICATION_PREFS_UPDATE");
 
         return updatedUser;
     }
@@ -240,10 +238,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteAccount(String email, String currentPassword) {
 
-        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
 
         if (user.getRole() == Role.ADMIN) {
-            throw new BusinessRuleException("Admin accounts can't be self-deleted - ask another admin to deactivate this account");
+            throw new BusinessRuleException(
+                    "Admin accounts can't be self-deleted - ask another admin to deactivate this account");
         }
 
         if (currentPassword == null || !passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUser(Long id) {
-
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+        return userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
     }
 }

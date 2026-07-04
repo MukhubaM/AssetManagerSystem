@@ -128,15 +128,9 @@
                     <option value="ACTIVE">Active</option>
                 </select>
 
-                <label for="supervisorId">Supervisor</label>
-                <select id="supervisorId" th:field="*{supervisorId}">
-                    <option value="">Select supervisor</option>
-                    <option
-                            th:each="s : ${supervisors}"
-                            th:value="${s.userId}"
-                            th:text="${s.name} + ' (' + ${s.role} + ')'">
-                    </option>
-                </select>
+                <p style="font-size:0.8rem; color:#52606d;">
+                    Your account will be supervised by an administrator.
+                </p>
             </div>
 
             <div id="managerSection" style="display:none;">
@@ -175,7 +169,8 @@
 
                 <p style="font-size:0.8rem; color:#52606d;">
                     These reflect your intended responsibilities. Actual system access is
-                    determined by your role, as set or changed by an administrator.
+                    determined by your role, as set or changed by an administrator. Your
+                    account will be supervised by an administrator.
                 </p>
             </div>
 

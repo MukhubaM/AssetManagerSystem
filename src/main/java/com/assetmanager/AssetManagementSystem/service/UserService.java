@@ -17,8 +17,6 @@ public interface UserService {
 
     List<User> getAllUsers();
 
-    // MANAGER/ADMIN accounts offered as 'Supervisor' choices
-    List<User> getPotentialSupervisors();
 
     User changeRole(Long userId, Role newRole, String actingAdminEmail);
 
