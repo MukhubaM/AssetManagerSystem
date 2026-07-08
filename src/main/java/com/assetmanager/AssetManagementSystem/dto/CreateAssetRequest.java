@@ -1,5 +1,6 @@
 package com.assetmanager.AssetManagementSystem.dto;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,8 +32,12 @@ public class CreateAssetRequest {
     @DecimalMin(value = "0.01", message = "Daily rate must be greater than zero")
     private BigDecimal dailyRate;
 
+    @Column(length = 150)
+    @NotBlank
     private String location;
 
+    @NotBlank
+    @Column(length = 100)
     private String condition;
 
     private MultipartFile photo;

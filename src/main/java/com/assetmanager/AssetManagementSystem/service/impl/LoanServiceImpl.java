@@ -82,8 +82,8 @@ public class LoanServiceImpl implements LoanService {
 
         notificationService.notify(borrower,
                 NotificationType.LOAN_REQUESTED,
-                "Loan request submitted",
-                "Your request to borrow \"" + asset.getTitle() + "\" for " + durationDays + " day(s) "
+                    "Loan request submitted",
+                 "Your request to borrow \"" + asset.getTitle() + "\" for " + durationDays + " day(s) "
                         + "(estimated cost: " + totalCost + ") has been submitted and is awaiting approval.");
 
         return savedLoan;
@@ -106,8 +106,8 @@ public class LoanServiceImpl implements LoanService {
 
         notificationService.notify(approvedLoan.getBorrower(),
                 NotificationType.LOAN_APPROVED,
-                "Loan approved",
-                "Your request to borrow \"" + approvedLoan.getAsset().getTitle() + "\" was approved. "
+                     "Loan approved",
+                 "Your request to borrow \"" + approvedLoan.getAsset().getTitle() + "\" was approved. "
                         + "Total cost: " + approvedLoan.getTotalCost() + ". Please complete payment to have it checked out.");
 
         return approvedLoan;
@@ -128,9 +128,8 @@ public class LoanServiceImpl implements LoanService {
         Loan rejectedLoan = loanRepository.save(loan);
         auditLogService.log(currentUserProvider.getCurrentUserId(), "LOAN", rejectedLoan.getLoanId(), "REJECT");
 
-        notificationService.notify(rejectedLoan.getBorrower(),
-                NotificationType.LOAN_REJECTED,
-                "Loan request rejected",
+        notificationService.notify(rejectedLoan.getBorrower(), NotificationType.LOAN_REJECTED,
+                   "Loan request rejected",
                 "Your request to borrow \"" + rejectedLoan.getAsset().getTitle() + "\" was not approved.");
 
         return rejectedLoan;
@@ -165,9 +164,8 @@ public class LoanServiceImpl implements LoanService {
         Loan checkedOutLoan = loanRepository.save(loan);
         auditLogService.log(currentUserProvider.getCurrentUserId(), "LOAN", checkedOutLoan.getLoanId(), "CHECK_OUT");
 
-        notificationService.notify(checkedOutLoan.getBorrower(),
-                NotificationType.LOAN_CHECKED_OUT,
-                "Asset checked out",
+        notificationService.notify(checkedOutLoan.getBorrower(), NotificationType.LOAN_CHECKED_OUT,
+                   "Asset checked out",
                 "You've checked out \"" + asset.getTitle() + "\". It's due back on " + checkedOutLoan.getDueDate() + ".");
 
         return checkedOutLoan;
@@ -193,9 +191,8 @@ public class LoanServiceImpl implements LoanService {
         Loan returnedLoan = loanRepository.save(loan);
         auditLogService.log(currentUserProvider.getCurrentUserId(), "LOAN", returnedLoan.getLoanId(), "RETURN");
 
-        notificationService.notify(returnedLoan.getBorrower(),
-                NotificationType.LOAN_RETURNED,
-                "Asset returned",
+        notificationService.notify(returnedLoan.getBorrower(), NotificationType.LOAN_RETURNED,
+                   "Asset returned",
                 "Thanks for returning \"" + asset.getTitle() + "\". Your loan is now closed.");
 
         return returnedLoan;
@@ -244,10 +241,9 @@ public class LoanServiceImpl implements LoanService {
                 auditLogService.log(currentUserProvider.getCurrentUserId(), "LOAN", loan.getLoanId(), "OVERDUE");
                 log.info("Loan {} marked OVERDUE (due {})", loan.getLoanId(), loan.getDueDate());
 
-                notificationService.notify(loan.getBorrower(),
-                        NotificationType.LOAN_OVERDUE,
-                        "Loan overdue",
-                        "\"" + loan.getAsset().getTitle() + "\" was due on " + loan.getDueDate()
+                notificationService.notify(loan.getBorrower(), NotificationType.LOAN_OVERDUE,
+                            "Loan overdue",
+                         "\"" + loan.getAsset().getTitle() + "\" was due on " + loan.getDueDate()
                                 + " and is now overdue. Please return it as soon as possible.");
             }
         }
@@ -273,10 +269,9 @@ public class LoanServiceImpl implements LoanService {
                 loan.setDueSoonNotified(true);
                 loanRepository.save(loan);
 
-                notificationService.notify(loan.getBorrower(),
-                        NotificationType.LOAN_DUE_SOON,
-                        "Loan due soon",
-                        "\"" + loan.getAsset().getTitle() + "\" is due back on " + dueDate
+                notificationService.notify(loan.getBorrower(), NotificationType.LOAN_DUE_SOON,
+                            "Loan due soon",
+                         "\"" + loan.getAsset().getTitle() + "\" is due back on " + dueDate
                                 + " - please plan to return it soon.");
 
                 log.info("Sent due-soon warning for loan {} (due {})", loan.getLoanId(), dueDate);

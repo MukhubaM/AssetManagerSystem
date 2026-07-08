@@ -68,7 +68,7 @@ public class AssetServiceImpl implements AssetService {
         asset.setLocation(request.getLocation());
         asset.setCondition(request.getCondition());
 
-        // Only replace the photo if a new one was actually uploaded, otherwise keep the existing one
+        // Only replace the photo if a new one was actually uploaded, otherwise it keeps the existing one
         if (request.getPhoto() != null && !request.getPhoto().isEmpty()) {
 
             asset.setPhotoPath(fileStorageService.store(request.getPhoto(), PHOTO_SUBDIRECTORY));

@@ -2,6 +2,7 @@ package com.assetmanager.AssetManagementSystem.repository;
 
 import com.assetmanager.AssetManagementSystem.entity.Notification;
 import com.assetmanager.AssetManagementSystem.entity.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

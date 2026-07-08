@@ -1,6 +1,7 @@
 package com.assetmanager.AssetManagementSystem.repository;
 
 import com.assetmanager.AssetManagementSystem.entity.PasswordResetToken;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

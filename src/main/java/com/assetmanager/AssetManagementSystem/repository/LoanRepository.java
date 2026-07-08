@@ -3,6 +3,7 @@ package com.assetmanager.AssetManagementSystem.repository;
 import com.assetmanager.AssetManagementSystem.entity.Loan;
 import com.assetmanager.AssetManagementSystem.entity.LoanStatus;
 import com.assetmanager.AssetManagementSystem.entity.User;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

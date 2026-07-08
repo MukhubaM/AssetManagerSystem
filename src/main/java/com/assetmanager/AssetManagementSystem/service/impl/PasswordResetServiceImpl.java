@@ -57,12 +57,12 @@ public class PasswordResetServiceImpl implements PasswordResetService {
             String resetLink = baseUrl + "/reset-password?token=" + resetToken.getToken();
 
             String body = "Hello " + user.getName() + ",\n\n"
-                    + "We received a request to reset your Asset Manager password. "
+                    + "We received a request to reset your ATLAS AMS password. "
                     + "This link is valid for " + TOKEN_VALID_MINUTES + " minutes:\n\n"
                     + resetLink + "\n\n"
                     + "If you didn't request this, you can safely ignore this email.";
 
-            emailService.send(user.getEmail(), "Reset your Asset Manager password", body);
+            emailService.send(user.getEmail(), "Reset your ATLAS AMS password", body);
 
             auditLogService.log(user.getUserId(), "USER", user.getUserId(), "PASSWORD_RESET_REQUESTED");
         });
@@ -91,9 +91,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         auditLogService.log(user.getUserId(), "USER", user.getUserId(), "PASSWORD_RESET_COMPLETED");
 
-        notificationService.notify(
-                user,
-                NotificationType.ACCOUNT, "Your password was changed", "Your Asset Manager password was just reset. If this wasn't you, contact an administrator immediately.");
+        notificationService.notify(user, NotificationType.ACCOUNT, "Your password was changed", "Your password was reset successfully. If this wasn't you, contact an administrator immediately.");
 
         log.info("Password reset completed for user {}", user.getEmail());
     }
@@ -104,12 +102,12 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         userRepository.findByMemberNumberAndIdNumber(memberNumber, idNumber).ifPresent(user -> {
 
             String body = "Hello " + user.getName() + ",\n\n"
-                    + "You (or someone with your member number and ID number) requested a reminder "
-                    + "of your Asset Manager username.\n\n"
+                    + "You requested a reminder "
+                    + "of your ATLAS AMS username.\n\n"
                     + "Your username is your email address: " + user.getEmail() + "\n\n"
                     + "If you didn't request this, you can safely ignore this email.";
 
-            emailService.send(user.getEmail(), "Your Asset Manager username", body);
+            emailService.send(user.getEmail(), "Your username", body);
 
             auditLogService.log(user.getUserId(), "USER", user.getUserId(), "USERNAME_RECOVERY_REQUESTED");
         });

@@ -72,7 +72,7 @@ public class PaymentServiceImpl implements PaymentService {
         requireBorrowerOrStaff(payment.getLoan(), actor);
 
         if (payment.getStatus() != PaymentStatus.PENDING) {
-            throw new BusinessRuleException("Only a pending payment can be confirmed");
+            throw new BusinessRuleException("Only pending payment can be confirmed");
         }
 
         payment.setStatus(PaymentStatus.COMPLETED);
@@ -94,7 +94,7 @@ public class PaymentServiceImpl implements PaymentService {
         Loan loan = payment.getLoan();
 
         if (loan.getStatus() != LoanStatus.APPROVED) {
-            throw new BusinessRuleException("This loan has already been checked out - a payment can no longer be rolled back");
+            throw new BusinessRuleException("This loan has already been checked out - payment can no longer be rolled back");
         }
 
         // A completed (already-paid) transaction is more sensitive to reverse than one that's still pending, so only admin can roll it back

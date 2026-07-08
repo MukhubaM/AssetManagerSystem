@@ -19,9 +19,7 @@ public class CurrentUserProvider {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null
-                || !authentication.isAuthenticated()
-                || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
+        if (authentication == null || !authentication.isAuthenticated() || !(authentication.getPrincipal() instanceof CustomUserDetails userDetails)) {
 
             return Optional.empty();
         }
