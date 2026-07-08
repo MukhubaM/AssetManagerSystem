@@ -1,60 +1,62 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
   <meta charset="UTF-8">
   <title>Notifications - Asset Manager</title>
+  <script th:src="@{/js/theme.js}"></script>
   <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+  <div class="shell">
 
-<div class="container">
+    <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-  <h2>Notifications</h2>
+    <div class="mwrap">
 
-  <form th:action="@{/notifications/read-all}" method="post">
-    <button type="submit" class="secondary">Mark All as Read</button>
-  </form>
+      <div th:replace="~{fragments/topbar :: topbar('Notifications')}"></div>
 
-  <table>
+      <div class="main">
 
-    <tr>
-      <th>Status</th>
-      <th>Title</th>
-      <th>Message</th>
-      <th>When</th>
-      <th></th>
-    </tr>
+        <div class="ph">
+          <div>
+            <div class="pt">Notifications</div>
+            <div class="ps">Loan approvals, rejections and reminders.</div>
+          </div>
+          <form th:action="@{/notifications/read-all}" method="post">
+            <button type="submit" class="btn btns">Mark All as Read</button>
+          </form>
+        </div>
 
-    <tr th:each="n : ${notifications}" th:style="${n.read} ? 'opacity:0.6;' : ''">
+        <div th:each="n : ${notifications}" class="ni" th:classappend="${!n.read} ? 'unread' : ''">
 
-      <td>
-        <span class="badge" th:text="${n.read} ? 'Read' : 'New'"> </span>
-      </td>
+          <div
+                  class="nico"
+                  th:classappend="${n.type != null and (n.type.name() == 'LOAN_REJECTED' or n.type.name() == 'LOAN_OVERDUE')} ? 'nico-a' : (${n.type != null and (n.type.name() == 'LOAN_APPROVED' or n.type.name() == 'LOAN_CHECKED_OUT' or n.type.name() == 'LOAN_RETURNED' or n.type.name() == 'ACCOUNT')} ? 'nico-g' : 'nico-b')">
+            <span th:replace="~{fragments/icons :: ic-notification}"></span>
+          </div>
 
-      <td th:text="${n.title}"></td>
-      <td th:text="${n.message}"></td>
-      <td th:text="${n.createdAt}"></td>
+          <div style="flex:1;">
+            <div class="ntit" th:text="${n.title}"></div>
+            <div class="nmsg" th:text="${n.message}"></div>
+            <div class="ntm" th:text="${n.createdAt}"></div>
+          </div>
 
-      <td>
-        <form
-                th:unless="${n.read}"
-                th:action="@{/notifications/{id}/read(id=${n.notificationId})}"
-                method="post">
+          <form th:unless="${n.read}" th:action="@{/notifications/{id}/read(id=${n.notificationId})}" method="post">
+            <button type="submit" class="btn btns bsm">Mark Read</button>
+          </form>
 
-          <button type="submit" style="margin-top:0;">Mark Read</button>
+        </div>
 
-        </form>
-      </td>
+        <p class="tmute tsm" th:if="${#lists.isEmpty(notifications)}">You have no notifications.</p>
 
-    </tr>
+      </div>
 
-  </table>
+    </div>
 
-  <p th:if="${#lists.isEmpty(notifications)}">You have no notifications.</p>
-
+  </div>
 </div>
 
 </body>

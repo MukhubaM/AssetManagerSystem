@@ -1,64 +1,109 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Create Asset - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container" style="max-width: 480px;">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="card">
+        <div class="mwrap">
 
-        <h2>Create Asset</h2>
+            <div th:replace="~{fragments/topbar :: topbar('Add Asset')}"></div>
 
-        <form
-                method="post"
-                enctype="multipart/form-data"
-                th:action="@{/assets/create}"
-                th:object="${assetRequest}">
+            <div class="main">
 
-            <label for="title">Title</label>
-            <input id="title" th:field="*{title}" placeholder="Title">
-            <span class="error-text" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+                <div class="ph">
+                    <div>
+                        <div class="pt">Add Asset</div>
+                        <div class="ps">Register a new item and set its rental rate.</div>
+                    </div>
+                </div>
 
-            <label for="category">Category</label>
-            <input id="category" th:field="*{category}" placeholder="Category">
-            <span class="error-text" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+                <div class="card" style="max-width:520px;">
+                    <div class="cb" style="padding:20px;">
 
-            <label for="serialNumber">Serial Number</label>
-            <input id="serialNumber" th:field="*{serialNumber}" placeholder="Serial Number">
-            <span class="error-text" th:if="${#fields.hasErrors('serialNumber')}" th:errors="*{serialNumber}"></span>
+                        <form
+                                method="post"
+                                enctype="multipart/form-data"
+                                th:action="@{/assets/create}"
+                                th:object="${assetRequest}"
+                                class="flex" style="flex-direction:column; gap:14px;">
 
-            <label for="acquisitionDate">Acquisition Date</label>
-            <input type="date" id="acquisitionDate" th:field="*{acquisitionDate}">
+                            <div class="fg">
+                                <label class="fl" for="title">Title</label>
+                                <input class="fi" id="title" th:field="*{title}" placeholder="Title">
+                                <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+                            </div>
 
-            <label for="cost">Cost (acquisition price)</label>
-            <input type="number" step="0.01" id="cost" th:field="*{cost}">
+                            <div class="fr2">
+                                <div class="fg">
+                                    <label class="fl" for="category">Category</label>
+                                    <input class="fi" id="category" th:field="*{category}" placeholder="Category">
+                                    <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></span>
+                                </div>
 
-            <label for="dailyRate">Daily Rate (rental cost per day)</label>
-            <input type="number" step="0.01" id="dailyRate" th:field="*{dailyRate}" placeholder="e.g. 10.00">
-            <span class="error-text" th:if="${#fields.hasErrors('dailyRate')}" th:errors="*{dailyRate}"></span>
+                                <div class="fg">
+                                    <label class="fl" for="serialNumber">Serial Number</label>
+                                    <input class="fi" id="serialNumber" th:field="*{serialNumber}" placeholder="Serial number">
+                                    <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('serialNumber')}" th:errors="*{serialNumber}"></span>
+                                </div>
+                            </div>
 
-            <label for="location">Location</label>
-            <input id="location" th:field="*{location}" placeholder="Location">
+                            <div class="fg">
+                                <label class="fl" for="acquisitionDate">Acquisition Date</label>
+                                <input class="fi" type="date" id="acquisitionDate" th:field="*{acquisitionDate}">
+                            </div>
 
-            <label for="condition">Condition</label>
-            <input id="condition" th:field="*{condition}" placeholder="Condition">
+                            <div class="fr2">
+                                <div class="fg">
+                                    <label class="fl" for="cost">Cost (acquisition price)</label>
+                                    <input class="fi" type="number" step="0.01" id="cost" th:field="*{cost}">
+                                </div>
 
-            <label for="photo">Photo</label>
-            <input type="file" id="photo" th:field="*{photo}">
+                                <div class="fg">
+                                    <label class="fl" for="dailyRate">Daily Rate (rental cost per day)</label>
+                                    <input class="fi" type="number" step="0.01" id="dailyRate" th:field="*{dailyRate}" placeholder="e.g. 10.00">
+                                    <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('dailyRate')}" th:errors="*{dailyRate}"></span>
+                                </div>
+                            </div>
 
-            <button type="submit">Save</button>
+                            <div class="fr2">
+                                <div class="fg">
+                                    <label class="fl" for="location">Location</label>
+                                    <input class="fi" id="location" th:field="*{location}" placeholder="Location">
+                                </div>
 
-        </form>
+                                <div class="fg">
+                                    <label class="fl" for="condition">Condition</label>
+                                    <input class="fi" id="condition" th:field="*{condition}" placeholder="Condition">
+                                </div>
+                            </div>
+
+                            <div class="fg">
+                                <label class="fl" for="photo">Photo</label>
+                                <input class="fi" type="file" id="photo" th:field="*{photo}">
+                            </div>
+
+                            <button type="submit" class="btn btnp" style="justify-content:center;">Save</button>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
 </div>
 
 </body>

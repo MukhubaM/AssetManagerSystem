@@ -1,39 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Overdue Loans - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Overdue Loans</h2>
+        <div class="mwrap">
 
-    <table>
+            <div th:replace="~{fragments/topbar :: topbar('Overdue Loans')}"></div>
 
-        <tr>
-            <th>Borrower</th>
-            <th>Asset</th>
-            <th>Due Date</th>
-        </tr>
+            <div class="main">
 
-        <tr th:each="loan : ${loans}">
+                <div class="ph">
+                    <div>
+                        <div class="pt">Overdue Loans</div>
+                        <div class="ps">Loans past their due date.</div>
+                    </div>
+                </div>
 
-            <td th:text="${loan.borrower.name}"></td>
-            <td th:text="${loan.asset.title}"></td>
-            <td th:text="${loan.dueDate}"></td>
+                <div class="card">
+                    <div class="cb" style="padding:0;">
+                        <table class="tbl">
 
-        </tr>
+                            <tr>
+                                <th>Borrower</th>
+                                <th>Asset</th>
+                                <th>Due Date</th>
+                            </tr>
 
-    </table>
+                            <tr th:each="loan : ${loans}">
 
-    <p th:if="${#lists.isEmpty(loans)}">No overdue loans. 🎉🎉🎉</p>
+                                <td th:text="${loan.borrower.name}"></td>
+                                <td class="cp" th:text="${loan.asset.title}"></td>
+                                <td th:text="${loan.dueDate}"></td>
 
+                            </tr>
+
+                        </table>
+
+                        <p class="tmute tsm" style="padding:16px;" th:if="${#lists.isEmpty(loans)}">No overdue loans. 🎉🎉🎉</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 </body>

@@ -1,121 +1,144 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Loan Requests - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Loan Requests</h2>
+        <div class="mwrap">
 
-    <table>
+            <div th:replace="~{fragments/topbar :: topbar('Loan Requests')}"></div>
 
-        <tr>
-            <th>ID</th>
-            <th>Asset</th>
-            <th>Borrower</th>
-            <th>Duration</th>
-            <th>Cost</th>
-            <th>Status</th>
-            <th>Payment</th>
-            <th>Actions</th>
-        </tr>
+            <div class="main">
 
-        <tr th:each="loan : ${loans}">
+                <div class="ph">
+                    <div>
+                        <div class="pt">Loan Requests</div>
+                        <div class="ps">Approve, reject and manage loans across the system.</div>
+                    </div>
+                </div>
 
-            <td th:text="${loan.loanId}"></td>
+                <div class="card">
+                    <div class="cb" style="padding:0;">
+                        <table class="tbl">
 
-            <td th:text="${loan.asset.title}"></td>
+                            <tr>
+                                <th>ID</th>
+                                <th>Asset</th>
+                                <th>Borrower</th>
+                                <th>Duration</th>
+                                <th>Cost</th>
+                                <th>Status</th>
+                                <th>Payment</th>
+                                <th>Actions</th>
+                            </tr>
 
-            <td th:text="${loan.borrower.name}"></td>
+                            <tr th:each="loan : ${loans}">
 
-            <td th:text="${loan.durationDays} + ' day(s)'"></td>
+                                <td th:text="${loan.loanId}"></td>
 
-            <td th:text="${loan.totalCost}"></td>
+                                <td class="cp" th:text="${loan.asset.title}"></td>
 
-            <td><span class="badge" th:text="${loan.status}"></span></td>
+                                <td th:text="${loan.borrower.name}"></td>
 
-            <td>
-                <span
-                        th:if="${loan.payment != null}"
-                        class="badge"
-                        th:text="${loan.payment.status}">
-                </span>
-                <span th:if="${loan.payment == null and loan.status.name() == 'APPROVED'}" style="color:#dc2626;">
-                    Not paid
-                </span>
-            </td>
+                                <td th:text="${loan.durationDays} + ' day(s)'"></td>
 
-            <td>
+                                <td th:text="${loan.totalCost}"></td>
 
-                <form
-                        class="inline-form"
-                        th:if="${loan.status.name() == 'PENDING'}"
-                        th:action="@{/loans/approve/{id}(id=${loan.loanId})}"
-                        method="post">
+                                <td>
+                                <span
+                                        class="b"
+                                        th:classappend="${loan.status.name() == 'PENDING'} ? 'ba' : (${loan.status.name() == 'REJECTED' or loan.status.name() == 'OVERDUE'} ? 'br' : (${loan.status.name() == 'RETURNED'} ? 'bs' : 'bb'))">
+                                    <span class="bd"></span>
+                                    <span th:text="${loan.status}"></span>
+                                </span>
+                                </td>
 
-                    <button>Approve</button>
+                                <td>
+                                <span
+                                        th:if="${loan.payment != null}"
+                                        class="b"
+                                        th:classappend="${loan.payment.status.name() == 'COMPLETED'} ? 'bg' : 'ba'">
+                                    <span class="bd"></span>
+                                    <span th:text="${loan.payment.status}"></span>
+                                </span>
+                                    <span th:if="${loan.payment == null and loan.status.name() == 'APPROVED'}" class="b br">
+                                    <span class="bd"></span> Not paid
+                                </span>
+                                </td>
 
-                </form>
+                                <td>
 
-                <form
-                        class="inline-form"
-                        th:if="${loan.status.name() == 'PENDING'}"
-                        th:action="@{/loans/reject/{id}(id=${loan.loanId})}"
-                        method="post">
+                                    <div class="flex g6" style="flex-wrap:wrap;">
 
-                    <button class="danger">Reject</button>
+                                        <form
+                                                th:if="${loan.status.name() == 'PENDING'}"
+                                                th:action="@{/loans/approve/{id}(id=${loan.loanId})}"
+                                                method="post">
+                                            <button class="btn btnp bsm">Approve</button>
+                                        </form>
 
-                </form>
+                                        <form
+                                                th:if="${loan.status.name() == 'PENDING'}"
+                                                th:action="@{/loans/reject/{id}(id=${loan.loanId})}"
+                                                method="post">
+                                            <button class="btn btnd bsm">Reject</button>
+                                        </form>
 
-                <form
-                        class="inline-form"
-                        th:if="${loan.status.name() == 'APPROVED' and loan.payment != null and loan.payment.status.name() == 'COMPLETED'}"
-                        th:action="@{/loans/checkout/{id}(id=${loan.loanId})}"
-                        method="post">
+                                        <form
+                                                th:if="${loan.status.name() == 'APPROVED' and loan.payment != null and loan.payment.status.name() == 'COMPLETED'}"
+                                                th:action="@{/loans/checkout/{id}(id=${loan.loanId})}"
+                                                method="post">
+                                            <button class="btn btnp bsm">Check Out</button>
+                                        </form>
 
-                    <button>Check Out</button>
+                                        <span
+                                                th:if="${loan.status.name() == 'APPROVED' and (loan.payment == null or loan.payment.status.name() != 'COMPLETED')}"
+                                                class="txs tmute">
+                                        Awaiting payment
+                                    </span>
 
-                </form>
+                                        <form
+                                                th:if="${loan.status.name() == 'APPROVED' and loan.payment != null}"
+                                                th:action="@{/payments/{id}/rollback(id=${loan.payment.paymentId})}"
+                                                method="post"
+                                                data-confirm="Roll back this payment? This deletes the transaction record.">
+                                            <button class="btn btnd bsm">Rollback Payment</button>
+                                        </form>
 
-                <span
-                        th:if="${loan.status.name() == 'APPROVED' and (loan.payment == null or loan.payment.status.name() != 'COMPLETED')}"
-                        style="font-size:0.8rem; color:#52606d;">
-                    Awaiting payment
-                </span>
+                                        <form
+                                                th:if="${loan.status.name() == 'CHECKED_OUT' or loan.status.name() == 'OVERDUE'}"
+                                                th:action="@{/loans/return/{id}(id=${loan.loanId})}"
+                                                method="post">
+                                            <button class="btn btns bsm">Return</button>
+                                        </form>
 
-                <form
-                        class="inline-form"
-                        th:if="${loan.status.name() == 'APPROVED' and loan.payment != null}"
-                        th:action="@{/payments/{id}/rollback(id=${loan.payment.paymentId})}"
-                        method="post">
+                                    </div>
 
-                    <button class="danger">Rollback Payment</button>
+                                </td>
 
-                </form>
+                            </tr>
 
-                <form
-                        class="inline-form"
-                        th:if="${loan.status.name() == 'CHECKED_OUT' or loan.status.name() == 'OVERDUE'}"
-                        th:action="@{/loans/return/{id}(id=${loan.loanId})}"
-                        method="post">
+                        </table>
 
-                    <button class="secondary">Return</button>
+                        <p class="tmute tsm" style="padding:16px;" th:if="${#lists.isEmpty(loans)}">No loan requests yet.</p>
+                    </div>
+                </div>
 
-                </form>
+            </div>
 
-            </td>
+        </div>
 
-        </tr>
-
-    </table>
-
+    </div>
 </div>
 
 </body>

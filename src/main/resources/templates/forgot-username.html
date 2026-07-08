@@ -1,49 +1,61 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Forgot Username - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div class="container" style="max-width: 380px;">
+<div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;">
 
-    <div class="card">
+    <div class="card" style="width:100%; max-width:380px; padding:28px;">
 
-        <h2>Forgot Username</h2>
+        <div class="flex aic g10 mb16">
+            <div class="sb-logo"><span th:replace="~{fragments/icons :: ic-logo}"></span></div>
+            <div class="tb-title">ATLAS</div>
+        </div>
+
+        <p class="ph"><span class="pt">Forgot Username</span></p>
 
         <div th:if="${submitted}">
-            <p style="color:#16a34a;">
-                If those details match an account, we've emailed that account's username (your login email) to it.
-            </p>
-            <a class="btn" th:href="@{/login}">Back to Login</a>
+            <div class="ni">
+                <div class="nico nico-g"><span th:replace="~{fragments/icons :: ic-check}"></span></div>
+                <div>
+                    <div class="ntit">Check your email</div>
+                    <div class="nmsg">If the details match an account, we've emailed that account's username (your login email) to it.</div>
+                </div>
+            </div>
+            <a class="btn btnp mt16" th:href="@{/login}" style="justify-content:center; width:100%;">Back to Login</a>
         </div>
 
         <form th:unless="${submitted}"
               th:action="@{/forgot-username}"
               th:object="${forgotUsernameRequest}"
-              method="post">
+              method="post"
+              class="flex" style="flex-direction:column; gap:14px;">
 
-            <p style="color:#52606d; font-size:0.9rem;">
-                Your username is your login email. Enter your Employee Number and ID Number
-                and we'll email it to you.
-            </p>
+            <p class="tsm tmute">Your username is your login email. Enter your Member Number and ID Number and we'll email it to you.</p>
 
-            <label for="employeeNumber">Employee Number</label>
-            <input id="employeeNumber" th:field="*{employeeNumber}" placeholder="Employee number">
-            <span class="error-text" th:if="${#fields.hasErrors('employeeNumber')}" th:errors="*{employeeNumber}"></span>
+            <div class="fg">
+                <label class="fl" for="memberNumber">Member Number</label>
+                <input class="fi" id="memberNumber" th:field="*{memberNumber}" placeholder="Member number">
+                <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('memberNumber')}" th:errors="*{memberNumber}"></span>
+            </div>
 
-            <label for="idNumber">ID Number</label>
-            <input id="idNumber" th:field="*{idNumber}" placeholder="ID number">
-            <span class="error-text" th:if="${#fields.hasErrors('idNumber')}" th:errors="*{idNumber}"></span>
+            <div class="fg">
+                <label class="fl" for="idNumber">ID Number</label>
+                <input class="fi" id="idNumber" th:field="*{idNumber}" placeholder="ID number">
+                <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('idNumber')}" th:errors="*{idNumber}"></span>
+            </div>
 
-            <button type="submit">Send Username</button>
+            <button type="submit" class="btn btnp" style="justify-content:center; padding:9px;">Send Username</button>
 
         </form>
 
-        <p style="margin-top: 1rem;">
+        <p class="tsm mt16" style="text-align:center;">
             <a th:href="@{/login}">Back to Login</a>
         </p>
 

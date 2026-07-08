@@ -1,48 +1,93 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Dashboard - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h1>AssetHub AMS</h1>
+        <div class="mwrap">
 
-    <div class="stats-grid">
+            <div th:replace="~{fragments/topbar :: topbar('ASSET MANAGEMENT SYSTEM')}"></div>
 
-        <div class="stat-card">
-            <h3>Total Assets</h3>
-            <span th:text="${stats.totalAssets}"></span>
-        </div>
+            <div class="main">
 
-        <div class="stat-card">
-            <h3>Available Assets</h3>
-            <span th:text="${stats.availableAssets}"></span>
-        </div>
+                <div class="ph">
+                    <div>
+                        <div class="pt">Overview</div>
+                        <div class="ps">Available services in dashboard</div>
+                    </div>
+                </div>
 
-        <div class="stat-card">
-            <h3>Loaned Assets</h3>
-            <span th:text="${stats.loanedAssets}"></span>
-        </div>
+                <div class="krow" style="grid-template-columns:repeat(5,1fr);">
 
-        <div class="stat-card">
-            <h3>Pending Loans</h3>
-            <span th:text="${stats.pendingLoans}"></span>
-        </div>
+                    <div class="kcard">
+                        <div class="k-ico"><span th:replace="~{fragments/icons :: ic-assets}"></span></div>
+                        <div class="k-v" th:text="${stats.totalAssets}">0</div>
+                        <div class="k-l">Total Assets</div>
+                    </div>
 
-        <div class="stat-card">
-            <h3>Overdue Loans</h3>
-            <span th:text="${stats.overdueLoans}"></span>
+                    <div class="kcard">
+                        <div class="k-ico"><span th:replace="~{fragments/icons :: ic-check}"></span></div>
+                        <div class="k-v" th:text="${stats.availableAssets}">0</div>
+                        <div class="k-l">Available Assets</div>
+                    </div>
+
+                    <div class="kcard">
+                        <div class="k-ico"><span th:replace="~{fragments/icons :: ic-my-loans}"></span></div>
+                        <div class="k-v" th:text="${stats.loanedAssets}">0</div>
+                        <div class="k-l">Loaned Assets</div>
+                    </div>
+
+                    <div class="kcard">
+                        <div class="k-ico"><span th:replace="~{fragments/icons :: ic-clock}"></span></div>
+                        <div class="k-v" th:text="${stats.pendingLoans}">0</div>
+                        <div class="k-l">Pending Loans</div>
+                    </div>
+
+                    <div class="kcard">
+                        <div class="k-ico"><span th:replace="~{fragments/icons :: ic-overdue}"></span></div>
+                        <div class="k-v" th:text="${stats.overdueLoans}">0</div>
+                        <div class="k-l">Overdue Loans</div>
+                    </div>
+
+                </div>
+
+                <div class="qag">
+
+                    <a class="qa" th:href="@{/assets}">
+                        <div class="qai"><span th:replace="~{fragments/icons :: ic-assets}"></span></div>
+                        <div class="ql">Browse Assets</div>
+                        <div class="qs">View and request available items</div>
+                    </a>
+
+                    <a class="qa" sec:authorize="hasAnyRole('BORROWER','MANAGER')" th:href="@{/loans/my}">
+                        <div class="qai"><span th:replace="~{fragments/icons :: ic-my-loans}"></span></div>
+                        <div class="ql">My Loans</div>
+                        <div class="qs">Track your active and past loans</div>
+                    </a>
+
+                    <a class="qa" sec:authorize="hasAnyRole('ADMIN','MANAGER')" th:href="@{/loans}">
+                        <div class="qai"><span th:replace="~{fragments/icons :: ic-loans}"></span></div>
+                        <div class="ql">Loan Requests</div>
+                        <div class="qs">Review pending approvals</div>
+                    </a>
+
+                </div>
+
+            </div>
+
         </div>
 
     </div>
-
 </div>
 
 </body>

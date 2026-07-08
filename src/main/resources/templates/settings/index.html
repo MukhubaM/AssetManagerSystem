@@ -1,74 +1,88 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Settings - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container" style="max-width: 480px;">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Settings</h2>
+        <div class="mwrap">
 
-    <div class="card">
+            <div th:replace="~{fragments/topbar :: topbar('Settings')}"></div>
 
-        <h3>Profile</h3>
+            <div class="main" style="max-width:560px;">
 
-        <p style="font-size:0.9rem; color:#52606d;">
-            Update your name, contact details, password, or profile picture.
-        </p>
+                <div class="ph">
+                    <div>
+                        <div class="pt">Settings</div>
+                        <div class="ps">Profile and notification preferences.</div>
+                    </div>
+                </div>
 
-        <a class="btn" th:href="@{/profile}">Edit Profile</a>
+                <div class="card mb16">
+                    <div class="ch"><div class="ct">Profile</div></div>
+                    <div class="cb" style="padding:16px;">
+                        <p class="tsm tmute mb12">Update your name, contact details, password or profile picture.</p>
+                        <a class="btn btnp" th:href="@{/profile}">Edit Profile</a>
+                    </div>
+                </div>
+
+                <div class="card mb16">
+                    <div class="ch"><div class="ct">Notifications</div></div>
+                    <div class="cb" style="padding:16px;">
+
+                        <div class="ni" th:if="${success}">
+                            <div class="nico nico-g"><span th:replace="~{fragments/icons :: ic-check}"></span></div>
+                            <div><div class="ntit">Preferences saved.</div></div>
+                        </div>
+
+                        <form
+                                th:action="@{/settings/notifications}"
+                                th:object="${preferences}"
+                                method="post"
+                                class="flex" style="flex-direction:column; gap:10px;">
+
+                            <label class="flex g8" style="align-items:flex-start;">
+                                <input type="checkbox" th:field="*{emailNotificationsEnabled}" style="accent-color:var(--brand); margin-top:2px;">
+                                <span class="tsm">
+                                Also email me for important notifications (overdue loans, upcoming
+                                due dates, account/security alerts)
+                            </span>
+                            </label>
+
+                            <p class="txs tmute">In-app notifications are always shown regardless of this setting.</p>
+
+                            <button type="submit" class="btn btnp" style="width:fit-content;">Save Preferences</button>
+
+                        </form>
+
+                    </div>
+                </div>
+
+                <div class="card" th:if="${user != null and user.role.name() != 'ADMIN'}">
+                    <div class="ch"><div class="ct" style="color:var(--danger);">Danger Zone</div></div>
+                    <div class="cb" style="padding:16px;">
+                        <p class="tsm tmute mb12">
+                            Deleting your account disables it and removes your personal details. Your
+                            loan and payment history is kept for record-keeping.
+                        </p>
+                        <a class="btn btnd" th:href="@{/settings/delete-account}">Delete My Account</a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
-    <div class="card">
-
-        <h3>Notifications</h3>
-
-        <p th:if="${success}" style="color:#16a34a;">Preferences saved.</p>
-
-        <form
-                th:action="@{/settings/notifications}"
-                th:object="${preferences}"
-                method="post">
-
-            <label>
-                <input
-                        type="checkbox"
-                        th:field="*{emailNotificationsEnabled}"
-                        style="width:auto; display:inline-block;">
-                Also email me for important notifications (overdue loans, upcoming due
-                dates, account/security alerts)
-            </label>
-
-            <p style="font-size:0.8rem; color:#52606d;">
-                In-app notifications are always shown regardless of this setting.
-            </p>
-
-            <button type="submit">Save Preferences</button>
-
-        </form>
-
-    </div>
-
-    <div class="card" th:if="${user != null and user.role.name() != 'ADMIN'}">
-
-        <h3 style="color:#dc2626;">Danger Zone</h3>
-
-        <p style="font-size:0.9rem; color:#52606d;">
-            Deleting your account disables it and removes your personal details. Your
-            loan and payment history is kept for record-keeping.
-        </p>
-
-        <a class="btn danger" th:href="@{/settings/delete-account}">Delete My Account</a>
-
-    </div>
-
 </div>
 
 </body>

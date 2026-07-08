@@ -1,95 +1,157 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title th:text="${asset.title}">Asset</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container" style="max-width: 480px;">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="card">
+        <div class="mwrap">
 
-        <h2 th:text="${asset.title}"></h2>
+            <div th:replace="~{fragments/topbar :: topbar('Asset Details')}"></div>
 
-        <p>Category: <span th:text="${asset.category}"></span></p>
-        <p>Serial Number: <span th:text="${asset.serialNumber}"></span></p>
-        <p>Location: <span th:text="${asset.location}"></span></p>
-        <p>Condition: <span th:text="${asset.condition}"></span></p>
-        <p>Status: <span class="badge" th:text="${asset.status}"></span></p>
-        <p>
-            Daily Rate:
-            <strong th:if="${asset.dailyRate != null}" th:text="${asset.dailyRate}"></strong>
-            <span th:if="${asset.dailyRate == null}" style="color:#dc2626;">Not set</span>
-        </p>
+            <div class="main">
 
-        <img
-                th:if="${asset.photoPath != null}"
-                th:src="@{'/uploads/' + ${asset.photoPath}}"
-                width="250"
-                alt="Asset photo">
+                <div class="ph">
+                    <div>
+                        <div class="pt" th:text="${asset.title}">Asset</div>
+                        <div class="ps" th:text="${asset.category}">Category</div>
+                    </div>
+                    <a class="btn btng" th:href="@{/assets}">
+                        <span th:replace="~{fragments/icons :: ic-back}"></span>
+                        Back to Assets
+                    </a>
+                </div>
 
-        <div sec:authorize="hasAnyRole('ADMIN','MANAGER')">
+                <div class="sp2">
 
-            <a class="btn secondary" th:href="@{/assets/{id}/edit(id=${asset.assetId})}">Edit</a>
+                    <div class="card">
+                        <div class="cb" style="padding:16px;">
 
-            <form
-                    class="inline-form"
-                    th:if="${asset.status.name() != 'RETIRED'}"
-                    th:action="@{/assets/{id}/retire(id=${asset.assetId})}"
-                    method="post">
+                            <img
+                                    th:if="${asset.photoPath != null}"
+                                    th:src="@{'/uploads/' + ${asset.photoPath}}"
+                                    style="width:100%; border-radius:10px; margin-bottom:14px;"
+                                    alt="Asset photo">
 
-                <button type="submit" class="danger">Retire Asset</button>
+                            <div class="sp-info-row">
+                                <span class="sp-info-label">Serial Number</span>
+                                <span class="sp-info-value" th:text="${asset.serialNumber}"></span>
+                            </div>
+                            <div class="sp-info-row">
+                                <span class="sp-info-label">Location</span>
+                                <span class="sp-info-value" th:text="${asset.location}"></span>
+                            </div>
+                            <div class="sp-info-row">
+                                <span class="sp-info-label">Condition</span>
+                                <span class="sp-info-value" th:text="${asset.condition}"></span>
+                            </div>
+                            <div class="sp-info-row">
+                                <span class="sp-info-label">Status</span>
+                                <span
+                                        class="b"
+                                        th:classappend="${asset.status.name() == 'AVAILABLE'} ? 'bg' : (${asset.status.name() == 'LOANED'} ? 'bb' : 'bs')">
+                                <span class="bd"></span>
+                                <span th:text="${asset.status}"></span>
+                            </span>
+                            </div>
+                            <div class="sp-info-row">
+                                <span class="sp-info-label">Daily Rate</span>
+                                <span class="sp-info-value" th:if="${asset.dailyRate != null}" th:text="${asset.dailyRate}"></span>
+                                <span class="mst" th:if="${asset.dailyRate == null}" style="color:var(--danger);">Not set</span>
+                            </div>
 
-            </form>
+                            <div class="div" sec:authorize="hasAnyRole('ADMIN','MANAGER')"></div>
+
+                            <div sec:authorize="hasAnyRole('ADMIN','MANAGER')" class="flex g8 mt12">
+
+                                <a class="btn btns" th:href="@{/assets/{id}/edit(id=${asset.assetId})}">
+                                    <span th:replace="~{fragments/icons :: ic-edit}"></span>
+                                    Edit
+                                </a>
+
+                                <form
+                                        th:if="${asset.status.name() != 'RETIRED'}"
+                                        th:action="@{/assets/{id}/retire(id=${asset.assetId})}"
+                                        method="post"
+                                        data-confirm="Retire this asset? It will no longer be available for loan.">
+
+                                    <button type="submit" class="btn btnd">
+                                        <span th:replace="~{fragments/icons :: ic-trash}"></span>
+                                        Retire Asset
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div
+                            class="card"
+                            sec:authorize="hasAnyRole('ADMIN','MANAGER','BORROWER')"
+                            th:if="${asset.status.name() == 'AVAILABLE' and asset.dailyRate != null}">
+
+                        <div class="ch"><div class="ct">Request This Item</div></div>
+
+                        <div class="cb" style="padding:16px;">
+
+                            <form
+                                    th:action="@{/loans/request/{id}(id=${asset.assetId})}"
+                                    method="post"
+                                    id="loanRequestForm"
+                                    class="flex" style="flex-direction:column; gap:12px;">
+
+                                <div class="fg">
+                                    <label class="fl" for="durationDays">Duration (days)</label>
+                                    <input
+                                            class="fi"
+                                            type="number"
+                                            id="durationDays"
+                                            name="durationDays"
+                                            min="1"
+                                            max="365"
+                                            value="1"
+                                            th:attr="data-daily-rate=${asset.dailyRate}"
+                                            oninput="updateEstimatedCost()">
+                                </div>
+
+                                <div class="mst" style="width:fit-content;">
+                                    <span th:replace="~{fragments/icons :: ic-dollar}"></span>
+                                    Estimated cost: <strong id="estimatedCost" th:text="${asset.dailyRate}"></strong>
+                                </div>
+
+                                <button type="submit" class="btn btnp" style="justify-content:center;">Request Loan</button>
+
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <div
+                            class="rib"
+                            sec:authorize="hasAnyRole('ADMIN','MANAGER','BORROWER')"
+                            th:if="${asset.status.name() == 'AVAILABLE' and asset.dailyRate == null}">
+                        <span th:replace="~{fragments/icons :: ic-warning}"></span>
+                        <div class="ribt">This item can't be requested yet - it has no daily rate set.</div>
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
-
-        <div
-                sec:authorize="hasAnyRole('ADMIN','MANAGER','BORROWER')"
-                th:if="${asset.status.name() == 'AVAILABLE' and asset.dailyRate != null}">
-
-            <h3 style="margin-top:1.5rem;">Request This Item</h3>
-
-            <form
-                    th:action="@{/loans/request/{id}(id=${asset.assetId})}"
-                    method="post"
-                    id="loanRequestForm">
-
-                <label for="durationDays">Duration (days)</label>
-                <input
-                        type="number"
-                        id="durationDays"
-                        name="durationDays"
-                        min="1"
-                        max="365"
-                        value="1"
-                        th:attr="data-daily-rate=${asset.dailyRate}"
-                        oninput="updateEstimatedCost()">
-
-                <p style="font-size:0.9rem; color:#52606d;">
-                    Estimated cost: <strong id="estimatedCost" th:text="${asset.dailyRate}"></strong>
-                </p>
-
-                <button type="submit">Request Loan</button>
-
-            </form>
-
-        </div>
-
-        <p
-                sec:authorize="hasAnyRole('ADMIN','MANAGER','BORROWER')"
-                th:if="${asset.status.name() == 'AVAILABLE' and asset.dailyRate == null}"
-                style="color:#dc2626;">
-            This item can't be requested yet - it has no daily rate set.
-        </p>
 
     </div>
-
 </div>
 
 <script th:inline="javascript">

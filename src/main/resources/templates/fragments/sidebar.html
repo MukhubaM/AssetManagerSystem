@@ -1,10 +1,143 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-$END$
+
+<div th:fragment="sidebar" class="sidebar">
+
+    <div class="sb-brand">
+        <div class="sb-logo" th:replace="~{fragments/icons :: ic-logo}"></div>
+        <div>
+            <div class="sb-appname">ATLAS</div>
+            <div class="sb-tagline">AMS</div>
+        </div>
+    </div>
+
+    <div class="sb-user" th:if="${currentUser != null}">
+        <div class="sb-av" th:text="${#strings.substring(currentUser.name, 0, 1)}">?</div>
+        <div>
+            <div class="sb-uname" th:text="${currentUser.name}">Name</div>
+            <span class="sb-role" th:text="${currentUser.role}">ROLE</span>
+        </div>
+    </div>
+
+    <div class="sb-sec">Main</div>
+
+    <a
+            class="sb-item"
+            th:classappend="${#strings.equals(currentUri, '/dashboard') or #strings.equals(currentUri, '/')} ? 'active' : ''"
+            th:href="@{/dashboard}">
+        <span th:replace="~{fragments/icons :: ic-dashboard}"></span>
+        <span>Dashboard</span>
+    </a>
+
+    <a
+            class="sb-item"
+            th:classappend="${#strings.startsWith(currentUri, '/assets')} ? 'active' : ''"
+            th:href="@{/assets}">
+        <span th:replace="~{fragments/icons :: ic-assets}"></span>
+        <span>Assets</span>
+    </a>
+
+    <a
+            class="sb-item"
+            th:classappend="${#strings.startsWith(currentUri, '/notifications')} ? 'active' : ''"
+            th:href="@{/notifications}">
+        <span th:replace="~{fragments/icons :: ic-notification}"></span>
+        <span>Notifications</span>
+        <span
+                th:if="${unreadNotificationCount != null and unreadNotificationCount > 0}"
+                class="sb-badge"
+                th:text="${unreadNotificationCount}">
+        </span>
+    </a>
+
+    <span sec:authorize="hasAnyRole('BORROWER','MANAGER')">
+        <a
+                class="sb-item"
+                th:classappend="${#strings.equals(currentUri, '/loans/my')} ? 'active' : ''"
+                th:href="@{/loans/my}">
+            <span th:replace="~{fragments/icons :: ic-my-loans}"></span>
+            <span>My Loans</span>
+        </a>
+    </span>
+
+    <div sec:authorize="hasAnyRole('ADMIN','MANAGER')">
+
+        <div class="sb-sec">Management</div>
+
+        <a
+                class="sb-item"
+                th:classappend="${#strings.equals(currentUri, '/loans')} ? 'active' : ''"
+                th:href="@{/loans}">
+            <span th:replace="~{fragments/icons :: ic-loans}"></span>
+            <span>Loan Requests</span>
+        </a>
+
+        <a
+                class="sb-item"
+                th:classappend="${#strings.equals(currentUri, '/loans/overdue')} ? 'active' : ''"
+                th:href="@{/loans/overdue}">
+            <span th:replace="~{fragments/icons :: ic-overdue}"></span>
+            <span>Overdue</span>
+        </a>
+
+        <a
+                class="sb-item"
+                th:classappend="${#strings.equals(currentUri, '/loans/history')} ? 'active' : ''"
+                th:href="@{/loans/history}">
+            <span th:replace="~{fragments/icons :: ic-history}"></span>
+            <span>Loan History</span>
+        </a>
+
+        <a
+                class="sb-item"
+                th:classappend="${#strings.equals(currentUri, '/assets/report')} ? 'active' : ''"
+                th:href="@{/assets/report}">
+            <span th:replace="~{fragments/icons :: ic-report}"></span>
+            <span>Inventory Report</span>
+        </a>
+
+    </div>
+
+    <div sec:authorize="hasRole('ADMIN')">
+
+        <div class="sb-sec">Admin</div>
+
+        <a
+                class="sb-item"
+                th:classappend="${#strings.equals(currentUri, '/admin/users')} ? 'active' : ''"
+                th:href="@{/admin/users}">
+            <span th:replace="~{fragments/icons :: ic-users}"></span>
+            <span>Manage Users</span>
+        </a>
+
+        <a
+                class="sb-item"
+                th:classappend="${#strings.equals(currentUri, '/admin/audit-logs')} ? 'active' : ''"
+                th:href="@{/admin/audit-logs}">
+            <span th:replace="~{fragments/icons :: ic-audit}"></span>
+            <span>Audit Log</span>
+        </a>
+
+    </div>
+
+    <div class="sb-footer">
+
+        <a class="sb-fi" th:href="@{/settings}">
+            <span th:replace="~{fragments/icons :: ic-settings}"></span>
+            <span>Settings</span>
+        </a>
+
+        <form th:action="@{/logout}" method="post" style="width:100%;">
+            <button type="submit" class="sb-fi">
+                <span th:replace="~{fragments/icons :: ic-logout}"></span>
+                <span>Logout</span>
+            </button>
+        </form>
+
+    </div>
+
+</div>
+
 </body>
 </html>

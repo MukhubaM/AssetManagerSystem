@@ -3,14 +3,16 @@ package com.assetmanager.AssetManagementSystem.service.impl;
 import com.assetmanager.AssetManagementSystem.dto.ProfileUpdateRequest;
 import com.assetmanager.AssetManagementSystem.dto.RegistrationRequest;
 import com.assetmanager.AssetManagementSystem.entity.*;
-        import com.assetmanager.AssetManagementSystem.exception.BusinessRuleException;
+import com.assetmanager.AssetManagementSystem.exception.BusinessRuleException;
 import com.assetmanager.AssetManagementSystem.exception.ResourceNotFoundException;
 import com.assetmanager.AssetManagementSystem.repository.UserRepository;
 import com.assetmanager.AssetManagementSystem.security.CurrentUserProvider;
 import com.assetmanager.AssetManagementSystem.service.AuditLogService;
 import com.assetmanager.AssetManagementSystem.service.FileStorageService;
 import com.assetmanager.AssetManagementSystem.service.UserService;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,8 +48,7 @@ public class UserServiceImpl implements UserService {
             throw new BusinessRuleException("Email already registered: " + request.getEmail());
         }
 
-        if (request.getDateOfBirth() != null
-                && Period.between(request.getDateOfBirth(), LocalDate.now()).getYears() < MINIMUM_AGE_YEARS) {
+        if (request.getDateOfBirth() != null && Period.between(request.getDateOfBirth(), LocalDate.now()).getYears() < MINIMUM_AGE_YEARS) {
             throw new BusinessRuleException("You must be at least " + MINIMUM_AGE_YEARS + " years old to register");
         }
 
@@ -65,7 +66,6 @@ public class UserServiceImpl implements UserService {
                 .email(request.getEmail())
                 .phone(request.getPhone())
                 .address(request.getAddress())
-                .employeeNumber(request.getEmployeeNumber())
                 .idNumber(request.getIdNumber())
                 .department(request.getDepartment())
                 .position(request.getPosition())
@@ -77,7 +77,6 @@ public class UserServiceImpl implements UserService {
 
         if (request.getRole() == Role.BORROWER) {
 
-            // Always ACTIVE
             builder.borrowerStatus(BorrowerStatus.ACTIVE);
 
         } else if (request.getRole() == Role.MANAGER) {
@@ -90,6 +89,8 @@ public class UserServiceImpl implements UserService {
         }
 
         User savedUser = userRepository.save(builder.build());
+        assignMemberNumber(savedUser);
+
         auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", savedUser.getUserId(), "REGISTER");
 
         return savedUser;
@@ -110,18 +111,26 @@ public class UserServiceImpl implements UserService {
                 .role(role)
                 .passwordHash(passwordEncoder.encode(rawPassword))
                 .enabled(true)
-                .employeeNumber("SYSTEM")
                 .idNumber("N/A")
                 .build();
 
         User savedUser = userRepository.save(user);
+        assignMemberNumber(savedUser);
+
         auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", savedUser.getUserId(), "CREATE");
 
         return savedUser;
     }
 
+    private void assignMemberNumber(User user) {
+
+        user.setMemberNumber("MEM-" + String.format("%06d", user.getUserId()));
+        userRepository.save(user);
+    }
+
     @Override
     public List<User> getAllUsers() {
+
         return userRepository.findAllByOrderByNameAsc();
     }
 
@@ -138,8 +147,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(newRole);
         User updatedUser = userRepository.save(user);
 
-        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(),
-                "ROLE_CHANGE:" + newRole);
+        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(), "ROLE_CHANGE:" + newRole);
 
         return updatedUser;
     }
@@ -157,8 +165,7 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(enabled);
         User updatedUser = userRepository.save(user);
 
-        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(),
-                enabled ? "ENABLE" : "DISABLE");
+        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(), enabled ? "ENABLE" : "DISABLE");
 
         return updatedUser;
     }
@@ -167,16 +174,13 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateProfile(String currentEmail, ProfileUpdateRequest request) {
 
-        User user = userRepository.findByEmail(currentEmail)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + currentEmail));
+        User user = userRepository.findByEmail(currentEmail).orElseThrow(() -> new ResourceNotFoundException("User not found: " + currentEmail));
 
-        boolean emailChanging = request.getEmail() != null
-                && !request.getEmail().equalsIgnoreCase(user.getEmail());
+        boolean emailChanging = request.getEmail() != null && !request.getEmail().equalsIgnoreCase(user.getEmail());
         boolean passwordChanging = request.getNewPassword() != null && !request.getNewPassword().isBlank();
 
         if (emailChanging || passwordChanging) {
-            if (request.getCurrentPassword() == null
-                    || !passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            if (request.getCurrentPassword() == null || !passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
                 throw new BusinessRuleException("Current password is incorrect");
             }
         }
@@ -222,14 +226,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateNotificationPreference(String email, boolean emailNotificationsEnabled) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
 
         user.setEmailNotificationsEnabled(emailNotificationsEnabled);
         User updatedUser = userRepository.save(user);
 
-        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(),
-                "NOTIFICATION_PREFS_UPDATE");
+        auditLogService.log(currentUserProvider.getCurrentUserId(), "USER", updatedUser.getUserId(), "NOTIFICATION_PREFS_UPDATE");
 
         return updatedUser;
     }
@@ -238,12 +240,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteAccount(String email, String currentPassword) {
 
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found: " + email));
 
         if (user.getRole() == Role.ADMIN) {
-            throw new BusinessRuleException(
-                    "Admin accounts can't be self-deleted - ask another admin to deactivate this account");
+            throw new BusinessRuleException("Admin accounts can't be self-deleted - ask another admin to deactivate this account");
         }
 
         if (currentPassword == null || !passwordEncoder.matches(currentPassword, user.getPasswordHash())) {
@@ -268,7 +268,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUser(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
+
+        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found: " + id));
     }
 }

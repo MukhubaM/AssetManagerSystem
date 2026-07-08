@@ -39,7 +39,7 @@ public class ProfileUpdateRequest {
     // Required only if email or newPassword is being changed
     private String currentPassword;
 
-
+    // Optional
     @Size(min = 0, max = 100)
     private String newPassword;
 }

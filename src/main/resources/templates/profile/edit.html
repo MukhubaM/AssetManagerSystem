@@ -1,110 +1,149 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>My Profile - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container" style="max-width: 480px;">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="card">
+        <div class="mwrap">
 
-        <h2>My Profile</h2>
+            <div th:replace="~{fragments/topbar :: topbar('My Profile')}"></div>
 
-        <p th:if="${success}" style="color:#16a34a;">Profile updated successfully.</p>
+            <div class="main">
 
-        <p style="font-size:0.85rem; color:#52606d;">
-            Role: <span class="badge" th:text="${role}"></span> &nbsp;
-            Department: <strong th:text="${department}"></strong> &nbsp;
-            Employee #: <strong th:text="${employeeNumber}"></strong> &nbsp;
-            ID #: <strong th:text="${idNumber}"></strong>
-            <br>
-            These fields are managed by an administrator and can't be changed here.
-        </p>
+                <div class="ph">
+                    <div>
+                        <div class="pt">My Profile</div>
+                        <div class="ps">Update your personal and contact details.</div>
+                    </div>
+                </div>
 
-        <form
-                th:action="@{/profile}"
-                th:object="${profileRequest}"
-                method="post"
-                enctype="multipart/form-data">
+                <div class="ni" style="margin-bottom:14px;" th:if="${success}">
+                    <div class="nico nico-g"><span th:replace="~{fragments/icons :: ic-check}"></span></div>
+                    <div><div class="ntit">Profile updated successfully.</div></div>
+                </div>
 
-            <h3 style="margin-top:1.5rem;">Personal Information</h3>
+                <div class="card" style="max-width:560px;">
+                    <div class="cb" style="padding:20px;">
 
-            <img
-                    th:if="${profilePicturePath != null}"
-                    th:src="@{'/uploads/' + ${profilePicturePath}}"
-                    width="120"
-                    style="border-radius: 8px; display:block; margin-bottom: 1rem;"
-                    alt="Profile picture">
+                        <div class="flex g10 mb16" style="flex-wrap:wrap;">
+                            <span class="mst"><span th:replace="~{fragments/icons :: ic-user}"></span> Role: <strong th:text="${role}"></strong></span>
+                            <span class="mst">Department: <strong th:text="${department}"></strong></span>
+                            <span class="mst">Member #: <strong th:text="${memberNumber}"></strong></span>
+                            <span class="mst">ID #: <strong th:text="${idNumber}"></strong></span>
+                        </div>
+                        <p class="txs tmute mb16">These fields are managed by an administrator and can't be changed here.</p>
 
-            <label for="profilePicture">Profile Picture</label>
-            <input type="file" id="profilePicture" th:field="*{profilePicture}">
+                        <form
+                                th:action="@{/profile}"
+                                th:object="${profileRequest}"
+                                method="post"
+                                enctype="multipart/form-data"
+                                class="flex" style="flex-direction:column; gap:14px;">
 
-            <label for="name">Full Name</label>
-            <input id="name" th:field="*{name}" placeholder="Full name">
-            <span class="error-text" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                            <div class="sb-sec" style="padding-left:0;">Personal Information</div>
 
-            <label for="gender">Gender</label>
-            <select id="gender" th:field="*{gender}">
-                <option
-                        th:each="g : ${genders}"
-                        th:value="${g}"
-                        th:text="${g}">
-                </option>
-            </select>
+                            <img
+                                    th:if="${profilePicturePath != null}"
+                                    th:src="@{'/uploads/' + ${profilePicturePath}}"
+                                    width="80"
+                                    style="border-radius:50%; display:block;"
+                                    alt="Profile picture">
 
-            <label for="dateOfBirth">Date of Birth</label>
-            <input type="date" id="dateOfBirth" th:field="*{dateOfBirth}">
-            <span class="error-text" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
+                            <div class="fg">
+                                <label class="fl" for="profilePicture">Profile Picture</label>
+                                <input class="fi" type="file" id="profilePicture" th:field="*{profilePicture}">
+                            </div>
 
-            <h3 style="margin-top:1.5rem;">Contact Information</h3>
+                            <div class="fg">
+                                <label class="fl" for="name">Full Name</label>
+                                <input class="fi" id="name" th:field="*{name}" placeholder="Full name">
+                                <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                            </div>
 
-            <label for="email">Email (also your username)</label>
-            <input id="email" th:field="*{email}" placeholder="Email">
-            <span class="error-text" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                            <div class="fr2">
+                                <div class="fg">
+                                    <label class="fl" for="gender">Gender</label>
+                                    <select class="fs" id="gender" th:field="*{gender}">
+                                        <option th:each="g : ${genders}" th:value="${g}" th:text="${g}"></option>
+                                    </select>
+                                </div>
 
-            <label for="phone">Phone Number</label>
-            <input id="phone" th:field="*{phone}" placeholder="Phone number">
+                                <div class="fg">
+                                    <label class="fl" for="dateOfBirth">Date of Birth</label>
+                                    <input class="fi" type="date" id="dateOfBirth" th:field="*{dateOfBirth}">
+                                    <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('dateOfBirth')}" th:errors="*{dateOfBirth}"></span>
+                                </div>
+                            </div>
 
-            <label for="address">Address</label>
-            <input id="address" th:field="*{address}" placeholder="Address">
+                            <div class="div"></div>
+                            <div class="sb-sec" style="padding-left:0;">Contact Information</div>
 
-            <label for="position">Position</label>
-            <input id="position" th:field="*{position}" placeholder="Position">
+                            <div class="fg">
+                                <label class="fl" for="email">Email (also your username)</label>
+                                <input class="fi" id="email" th:field="*{email}" placeholder="Email">
+                                <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+                            </div>
 
-            <h3 style="margin-top:1.5rem;">Change Password</h3>
+                            <div class="fr2">
+                                <div class="fg">
+                                    <label class="fl" for="phone">Phone Number</label>
+                                    <input class="fi" id="phone" th:field="*{phone}" placeholder="Phone number">
+                                </div>
 
-            <p style="font-size: 0.85rem; color: #52606d;">
-                Changing your email or password requires your current password, and you'll need
-                to log in again afterwards.
-            </p>
+                                <div class="fg">
+                                    <label class="fl" for="position">Position</label>
+                                    <input class="fi" id="position" th:field="*{position}" placeholder="Position">
+                                </div>
+                            </div>
 
-            <label for="currentPassword">Current Password</label>
-            <input
-                    type="password"
-                    id="currentPassword"
-                    th:field="*{currentPassword}"
-                    placeholder="Required to change email or password">
+                            <div class="fg">
+                                <label class="fl" for="address">Address</label>
+                                <input class="fi" id="address" th:field="*{address}" placeholder="Address">
+                            </div>
 
-            <label for="newPassword">New Password</label>
-            <input
-                    type="password"
-                    id="newPassword"
-                    th:field="*{newPassword}"
-                    placeholder="Leave blank to keep current password">
-            <span class="error-text" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
+                            <div class="div"></div>
+                            <div class="sb-sec" style="padding-left:0;">Change Password</div>
 
-            <button type="submit">Save Changes</button>
+                            <p class="txs tmute">
+                                Changing your email or password requires your current password, and you'll
+                                need to log in again afterwards.
+                            </p>
 
-        </form>
+                            <div class="fr2">
+                                <div class="fg">
+                                    <label class="fl" for="currentPassword">Current Password</label>
+                                    <input class="fi" type="password" id="currentPassword" th:field="*{currentPassword}" placeholder="Required to change email or password">
+                                </div>
+
+                                <div class="fg">
+                                    <label class="fl" for="newPassword">New Password</label>
+                                    <input class="fi" type="password" id="newPassword" th:field="*{newPassword}" placeholder="Leave blank to keep current password">
+                                    <span class="txs" style="color:var(--danger);" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btnp" style="justify-content:center;">Save Changes</button>
+
+                        </form>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
 </div>
 
 </body>

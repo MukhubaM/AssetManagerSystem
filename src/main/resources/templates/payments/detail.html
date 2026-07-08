@@ -1,65 +1,99 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Payment - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container" style="max-width: 420px;">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <div class="card">
+        <div class="mwrap">
 
-        <h2>Payment</h2>
+            <div th:replace="~{fragments/topbar :: topbar('Payment')}"></div>
 
-        <p>Item: <strong th:text="${payment.loan.asset.title}"></strong></p>
-        <p>Duration: <strong th:text="${payment.loan.durationDays} + ' day(s)'"></strong></p>
-        <p>Amount: <strong th:text="${payment.amount}"></strong></p>
-        <p>Status: <span class="badge" th:text="${payment.status}"></span></p>
+            <div class="main">
 
-        <p style="font-size:0.8rem; color:#52606d;">
-            This is a mock payment - no real payment processor is involved. Confirming
-            simply marks this transaction as completed so the loan can be checked out.
-        </p>
+                <div class="ph">
+                    <div>
+                        <div class="pt">Payment</div>
+                        <div class="ps">Complete payment</div>
+                    </div>
+                </div>
 
-        <form
-                th:if="${payment.status.name() == 'PENDING'}"
-                th:action="@{/payments/{id}/confirm(id=${payment.paymentId})}"
-                method="post">
+                <div class="card" style="max-width:420px;">
+                    <div class="cb" style="padding:16px;">
 
-            <button type="submit">Confirm Payment</button>
+                        <div class="sp-info-row">
+                            <span class="sp-info-label">Item</span>
+                            <span class="sp-info-value" th:text="${payment.loan.asset.title}"></span>
+                        </div>
+                        <div class="sp-info-row">
+                            <span class="sp-info-label">Duration</span>
+                            <span class="sp-info-value" th:text="${payment.loan.durationDays} + ' day(s)'"></span>
+                        </div>
+                        <div class="sp-info-row">
+                            <span class="sp-info-label">Amount</span>
+                            <span class="sp-info-value" th:text="${payment.amount}"></span>
+                        </div>
+                        <div class="sp-info-row">
+                            <span class="sp-info-label">Status</span>
+                            <span
+                                    class="b"
+                                    th:classappend="${payment.status.name() == 'COMPLETED'} ? 'bg' : 'ba'">
+                            <span class="bd"></span>
+                            <span th:text="${payment.status}"></span>
+                        </span>
+                        </div>
 
-        </form>
+                        <div class="rib mt16" th:if="${payment.status.name() == 'PENDING'}">
+                            <span th:replace="~{fragments/icons :: ic-credit-card}"></span>
+                            <div class="ribt">Confirming marks this transaction as completed so the loan can be checked out.</div>
+                        </div>
 
-        <form
-                th:if="${payment.status.name() == 'PENDING'}"
-                th:action="@{/payments/{id}/rollback(id=${payment.paymentId})}"
-                method="post">
+                        <div class="flex g8 mt16">
 
-            <button type="submit" class="danger">Cancel Payment</button>
+                            <form th:if="${payment.status.name() == 'PENDING'}" th:action="@{/payments/{id}/confirm(id=${payment.paymentId})}" method="post">
+                                <button type="submit" class="btn btnp">Confirm Payment</button>
+                            </form>
 
-        </form>
+                            <form
+                                    th:if="${payment.status.name() == 'PENDING'}"
+                                    th:action="@{/payments/{id}/rollback(id=${payment.paymentId})}"
+                                    method="post"
+                                    data-confirm="Cancel this payment? This deletes the transaction record.">
+                                <button type="submit" class="btn btnd">Cancel Payment</button>
+                            </form>
 
-        <form
-                sec:authorize="hasAnyRole('ADMIN','MANAGER')"
-                th:if="${payment.status.name() == 'COMPLETED'}"
-                th:action="@{/payments/{id}/rollback(id=${payment.paymentId})}"
-                method="post">
+                            <form
+                                    sec:authorize="hasAnyRole('ADMIN','MANAGER')"
+                                    th:if="${payment.status.name() == 'COMPLETED'}"
+                                    th:action="@{/payments/{id}/rollback(id=${payment.paymentId})}"
+                                    method="post"
+                                    data-confirm="Roll back this payment? This deletes the transaction record.">
+                                <button type="submit" class="btn btnd">Rollback Payment</button>
+                            </form>
 
-            <button type="submit" class="danger">Rollback Payment</button>
+                        </div>
 
-        </form>
+                        <p class="tsm mt12" style="color:var(--success);" th:if="${payment.status.name() == 'COMPLETED'}">
+                            Payment complete - waiting for checkout
+                        </p>
 
-        <p th:if="${payment.status.name() == 'COMPLETED'}" style="color:#16a34a;">
-            Payment complete - a manager can now check this loan out.
-        </p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
 </div>
 
 </body>

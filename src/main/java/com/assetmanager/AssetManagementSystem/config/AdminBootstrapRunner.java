@@ -43,7 +43,7 @@ public class AdminBootstrapRunner implements ApplicationRunner {
 
         userService.createUser(adminName, adminDepartment, adminEmail, adminPassword, Role.ADMIN);
 
-        //This banner style is for admins to notice immediately in logs that the first admin was generated
+        //This banner style is for admins to notice immediately in logs that the first admin was generated(only when there's no user created, yet)
         log.warn("=================================================================");
         log.warn(" No ADMIN account existed, created a bootstrap admin:");
         log.warn("   email:    {}", adminEmail);

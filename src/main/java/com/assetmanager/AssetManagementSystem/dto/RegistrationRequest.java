@@ -4,8 +4,11 @@ import com.assetmanager.AssetManagementSystem.entity.BorrowerStatus;
 import com.assetmanager.AssetManagementSystem.entity.Gender;
 import com.assetmanager.AssetManagementSystem.entity.ManagerLevel;
 import com.assetmanager.AssetManagementSystem.entity.Role;
+
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.*;
-        import lombok.Data;
+
+import lombok.Data;
 
 import java.time.LocalDate;
 
@@ -39,16 +42,14 @@ public class RegistrationRequest {
 
 
     // Employment information
-    @NotBlank(message = "Employee number is required")
-    private String employeeNumber;
-
     @NotBlank(message = "ID number is required")
+    @Column(unique = true, length = 13)
     private String idNumber;
 
     @NotBlank
     private String department;
 
-    @NotBlank
+    @Column(length = 50)
     private String position;
 
 
@@ -71,11 +72,11 @@ public class RegistrationRequest {
 
 
     // For Borrower
-    // Always forced to ACTIVE by the service
+    // Always forced to ACTIVE
     private BorrowerStatus borrowerStatus = BorrowerStatus.ACTIVE;
 
 
-    // For Manager
+    //  For Manager
     private ManagerLevel managerLevel;
 
     private Boolean canApproveLoans = Boolean.TRUE;

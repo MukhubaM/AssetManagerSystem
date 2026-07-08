@@ -1,20 +1,47 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Error - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
-    <div class="card">
-        <h2>Something went wrong</h2>
-        <p th:text="${message}"></p>
-        <a class="btn" th:href="@{/dashboard}">Back to Dashboard</a>
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+        <div class="mwrap">
+
+            <div th:replace="~{fragments/topbar :: topbar('Error')}"></div>
+
+            <div class="main" style="max-width:480px;">
+
+                <div class="card">
+                    <div class="cb" style="padding:20px;">
+
+                        <div class="flex g10 mb12" style="align-items:flex-start;">
+                            <div class="nico nico-a" style="flex-shrink:0;">
+                                <span th:replace="~{fragments/icons :: ic-warning}"></span>
+                            </div>
+                            <div>
+                                <div class="ct">Something went wrong</div>
+                                <p class="tsm tmute mt8" th:text="${message}"></p>
+                            </div>
+                        </div>
+
+                        <a class="btn btnp" th:href="@{/dashboard}">Back to Dashboard</a>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 </div>
 

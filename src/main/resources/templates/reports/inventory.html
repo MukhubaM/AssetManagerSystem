@@ -1,39 +1,68 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Inventory Report - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Inventory Report</h2>
+        <div class="mwrap">
 
-    <table>
+            <div th:replace="~{fragments/topbar :: topbar('Inventory Report')}"></div>
 
-        <tr>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Location</th>
-            <th>Status</th>
-        </tr>
+            <div class="main">
 
-        <tr th:each="asset : ${assets}">
+                <div class="ph">
+                    <div>
+                        <div class="pt">Inventory Report</div>
+                        <div class="ps">Every asset in the system.</div>
+                    </div>
+                </div>
 
-            <td th:text="${asset.title}"></td>
-            <td th:text="${asset.category}"></td>
-            <td th:text="${asset.location}"></td>
-            <td><span class="badge" th:text="${asset.status}"></span></td>
+                <div class="card">
+                    <div class="cb" style="padding:0;">
+                        <table class="tbl">
 
-        </tr>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                            </tr>
 
-    </table>
+                            <tr th:each="asset : ${assets}">
 
+                                <td class="cp" th:text="${asset.title}"></td>
+                                <td th:text="${asset.category}"></td>
+                                <td th:text="${asset.location}"></td>
+                                <td>
+                                <span
+                                        class="b"
+                                        th:classappend="${asset.status.name() == 'AVAILABLE'} ? 'bg' : (${asset.status.name() == 'LOANED'} ? 'bb' : 'bs')">
+                                    <span class="bd"></span>
+                                    <span th:text="${asset.status}"></span>
+                                </span>
+                                </td>
+
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 </body>

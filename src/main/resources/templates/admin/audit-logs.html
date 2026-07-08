@@ -1,43 +1,65 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Audit Log - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Audit Log</h2>
+        <div class="mwrap">
 
-    <table>
+            <div th:replace="~{fragments/topbar :: topbar('Audit Log')}"></div>
 
-        <tr>
-            <th>Time</th>
-            <th>User ID</th>
-            <th>Entity</th>
-            <th>Entity ID</th>
-            <th>Action</th>
-        </tr>
+            <div class="main">
 
-        <tr th:each="entry : ${logs}">
+                <div class="ph">
+                    <div>
+                        <div class="pt">Audit Log</div>
+                        <div class="ps">A record of actions taken across the system.</div>
+                    </div>
+                </div>
 
-            <td th:text="${entry.timestamp}"></td>
-            <td th:text="${entry.userId}"></td>
-            <td th:text="${entry.entityType}"></td>
-            <td th:text="${entry.entityId}"></td>
-            <td th:text="${entry.action}"></td>
+                <div class="card">
+                    <div class="cb" style="padding:0;">
+                        <table class="tbl">
 
-        </tr>
+                            <tr>
+                                <th>Time</th>
+                                <th>User ID</th>
+                                <th>Entity</th>
+                                <th>Entity ID</th>
+                                <th>Action</th>
+                            </tr>
 
-    </table>
+                            <tr th:each="entry : ${logs}">
 
-    <p th:if="${#lists.isEmpty(logs)}">No activity recorded yet.</p>
+                                <td th:text="${entry.timestamp}"></td>
+                                <td th:text="${entry.userId}"></td>
+                                <td th:text="${entry.entityType}"></td>
+                                <td th:text="${entry.entityId}"></td>
+                                <td th:text="${entry.action}"></td>
 
+                            </tr>
+
+                        </table>
+
+                        <p class="tmute tsm" style="padding:16px;" th:if="${#lists.isEmpty(logs)}">No activity recorded yet.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 </body>

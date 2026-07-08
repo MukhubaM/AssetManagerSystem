@@ -71,7 +71,7 @@ public class ProfileController {
         userService.updateProfile(originalEmail, request);
 
         if (emailChanging || passwordChanging) {
-            new SecurityContextLogoutHandler().logout(httpRequest, httpResponse, auth);                    // The session's authenticated is keyed on the old email/password, forces a fresh login rather than leaving a half-valid session
+            new SecurityContextLogoutHandler().logout(httpRequest, httpResponse, auth);                                // The session's authenticated is keyed on the old email/password, forces a fresh login rather than leaving a half-valid session
 
             return "redirect:/login?" + (emailChanging ? "emailChanged" : "passwordChanged");
         }
@@ -91,7 +91,7 @@ public class ProfileController {
 
         model.addAttribute("email", user.getEmail());
         model.addAttribute("role", user.getRole());
-        model.addAttribute("employeeNumber", user.getEmployeeNumber());
+        model.addAttribute("memberNumber", user.getMemberNumber());
         model.addAttribute("idNumber", user.getIdNumber());
         model.addAttribute("department", user.getDepartment());
         model.addAttribute("genders", Gender.values());

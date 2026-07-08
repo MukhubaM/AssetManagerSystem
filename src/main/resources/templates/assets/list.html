@@ -1,67 +1,88 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Assets - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Assets</h2>
+        <div class="mwrap">
 
-    <a class="btn" sec:authorize="hasAnyRole('ADMIN','MANAGER')" th:href="@{/assets/create}">Add Asset</a>
+            <div th:replace="~{fragments/topbar :: topbar('Assets')}"></div>
 
-    <div class="card">
+            <div class="main">
 
-        <form th:action="@{/assets/search}" method="get">
+                <div class="ph">
+                    <div>
+                        <div class="pt">Assets</div>
+                        <div class="ps">Browse and manage the items in the system.</div>
+                    </div>
+                    <a class="btn btnp" sec:authorize="hasAnyRole('ADMIN','MANAGER')" th:href="@{/assets/create}">
+                        <span th:replace="~{fragments/icons :: ic-plus}"></span>
+                        Add Asset
+                    </a>
+                </div>
 
-            <label for="keyword">Search</label>
-            <input
-                    type="text"
-                    id="keyword"
-                    name="keyword"
-                    th:value="${keyword}"
-                    placeholder="Search by title">
+                <div class="fbar">
+                    <form class="sw" th:action="@{/assets/search}" method="get">
+                        <span th:replace="~{fragments/icons :: ic-search}"></span>
+                        <input class="si" type="text" name="keyword" th:value="${keyword}" placeholder="Search by title">
+                    </form>
+                </div>
 
-            <button type="submit">Search</button>
+                <div class="card">
+                    <div class="cb" style="padding:0;">
+                        <table class="tbl">
 
-        </form>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                            </tr>
+
+                            <tr th:each="asset : ${assets}">
+
+                                <td>
+                                    <a
+                                            class="cp asset-title-clickable"
+                                            th:href="@{/assets/{id}(id=${asset.assetId})}"
+                                            th:text="${asset.title}">
+                                    </a>
+                                    <div class="cs" th:text="'#' + ${asset.assetId}"></div>
+                                </td>
+
+                                <td th:text="${asset.category}"></td>
+
+                                <td>
+                                <span
+                                        class="b"
+                                        th:classappend="${asset.status.name() == 'AVAILABLE'} ? 'bg' : (${asset.status.name() == 'LOANED'} ? 'bb' : 'bs')">
+                                    <span class="bd"></span>
+                                    <span th:text="${asset.status}"></span>
+                                </span>
+                                </td>
+
+                            </tr>
+
+                        </table>
+
+                        <p class="tmute tsm" style="padding:16px;" th:if="${#lists.isEmpty(assets)}">No assets found.</p>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
 
     </div>
-
-    <table>
-
-        <tr>
-            <th>ID</th>
-            <th>Title</th>
-            <th>Category</th>
-            <th>Status</th>
-        </tr>
-
-        <tr th:each="asset : ${assets}">
-
-            <td th:text="${asset.assetId}"></td>
-
-            <td>
-                <a
-                        th:href="@{/assets/{id}(id=${asset.assetId})}"
-                        th:text="${asset.title}">
-                </a>
-            </td>
-
-            <td th:text="${asset.category}"></td>
-
-            <td><span class="badge" th:text="${asset.status}"></span></td>
-
-        </tr>
-
-    </table>
-
 </div>
 
 </body>

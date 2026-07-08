@@ -1,46 +1,58 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Login - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div class="container" style="max-width: 380px;">
+<div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px;">
 
-    <div class="card">
+    <div class="card" style="width:100%; max-width:380px; padding:28px;">
 
-        <h2>Login</h2>
+        <div class="flex aic g10 mb16">
+            <div class="sb-logo"><span th:replace="~{fragments/icons :: ic-logo}"></span></div>
+            <div class="tb-title">ATLAS</div>
+        </div>
 
-        <p class="error-text" th:if="${param.error}">Invalid email or password.</p>
-        <p th:if="${param.logout}">You have been logged out.</p>
-        <p th:if="${param.passwordReset}" style="color:#16a34a;">Your password has been reset. Please log in.</p>
-        <p th:if="${param.emailChanged}" style="color:#16a34a;">Your email was updated. Please log in with your new email.</p>
-        <p th:if="${param.passwordChanged}" style="color:#16a34a;">Your password was updated. Please log in again.</p>
-        <p th:if="${param.registered}" style="color:#16a34a;">Account created. Please log in.</p>
-        <p th:if="${param.accountDeleted}" style="color:#16a34a;">Your account has been deleted.</p>
+        <p class="ph"><span class="pt">Log In</span></p>
 
-        <form th:action="@{/login}" method="post">
+        <div class="sp-error" th:if="${param.error}">Invalid email or password.</div>
+        <div class="ni" th:if="${param.logout}"><div class="nmsg">You have been logged out.</div></div>
+        <div class="ni" th:if="${param.passwordReset}"><div class="nmsg">Your password has been reset. Please log in.</div></div>
+        <div class="ni" th:if="${param.emailChanged}"><div class="nmsg">Your email was updated. Please log in with your new email.</div></div>
+        <div class="ni" th:if="${param.passwordChanged}"><div class="nmsg">Your password was updated. Please log in again.</div></div>
+        <div class="ni" th:if="${param.registered}"><div class="nmsg">Account created. Please log in.</div></div>
+        <div class="ni" th:if="${param.accountDeleted}"><div class="nmsg">Your account has been deleted.</div></div>
 
-            <label for="username">Email</label>
-            <input type="text" id="username" name="username" placeholder="Email">
+        <form th:action="@{/login}" method="post" class="flex" style="flex-direction:column; gap:14px; margin-top:10px;">
 
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Password">
+            <div class="fg">
+                <label class="fl" for="username">Email</label>
+                <input class="fi" type="text" id="username" name="username" placeholder="you@example.com">
+            </div>
 
-            <button type="submit">Login</button>
+            <div class="fg">
+                <label class="fl" for="password">Password</label>
+                <input class="fi" type="password" id="password" name="password" placeholder="Password">
+            </div>
+
+            <button type="submit" class="btn btnp" style="justify-content:center; padding:9px;">Login</button>
 
         </form>
 
-        <p style="margin-top: 1rem; font-size: 0.9rem;">
-            <a th:href="@{/forgot-password}">Forgot password?</a>
-            &nbsp;|&nbsp;
-            <a th:href="@{/forgot-username}">Forgot username?</a>
+        <div class="div"></div>
+
+        <p class="tsm" style="text-align:center;">
+            <a th:href="@{/forgot-password}" class="tmute">Forgot password?</a>
+            &nbsp;&middot;&nbsp;
+            <a th:href="@{/forgot-username}" class="tmute">Forgot username?</a>
         </p>
 
-        <p style="margin-top: 1rem;">
+        <p class="tsm mt8" style="text-align:center;">
             No account? <a th:href="@{/register}">Register</a>
         </p>
 

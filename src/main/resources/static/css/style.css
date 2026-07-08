@@ -2463,7 +2463,9 @@ textarea.form-input {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
 }
 
 .auth-logo {
@@ -2608,3 +2610,5 @@ textarea.form-input {
   padding: 9px 12px;
   font-size: 13px;
 }
+
+

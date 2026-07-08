@@ -10,8 +10,9 @@ import lombok.Data;
 public class ForgotUsernameRequest {
 
     @NotBlank
-    private String employeeNumber;
-
-    @NotBlank
     private String idNumber;
+
+     @NotBlank
+     private String memberNumber;
+
 }

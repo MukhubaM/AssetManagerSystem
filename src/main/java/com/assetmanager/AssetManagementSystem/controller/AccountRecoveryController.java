@@ -6,6 +6,7 @@ import com.assetmanager.AssetManagementSystem.dto.ResetPasswordRequest;
 import com.assetmanager.AssetManagementSystem.service.PasswordResetService;
 
 import jakarta.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,7 @@ public class AccountRecoveryController {
 
     private final PasswordResetService passwordResetService;
 
-    // Forgot password code scope
+    // Forgot password
     @GetMapping("/forgot-password")
     public String forgotPasswordForm(Model model) {
 
@@ -36,6 +37,7 @@ public class AccountRecoveryController {
             Model model) {
 
         if (result.hasErrors()) {
+
             return "forgot-password";
         }
 
@@ -70,6 +72,7 @@ public class AccountRecoveryController {
             Model model) {
 
         if (result.hasErrors()) {
+
             return "reset-password";
         }
 
@@ -78,7 +81,7 @@ public class AccountRecoveryController {
         return "redirect:/login?passwordReset";
     }
 
-    // Forgot username
+    //  Forgot username
     @GetMapping("/forgot-username")
     public String forgotUsernameForm(Model model) {
 
@@ -95,11 +98,12 @@ public class AccountRecoveryController {
             Model model) {
 
         if (result.hasErrors()) {
+
             return "forgot-username";
         }
 
         passwordResetService.recoverUsername(
-                forgotUsernameRequest.getEmployeeNumber(),
+                forgotUsernameRequest.getMemberNumber(),
                 forgotUsernameRequest.getIdNumber());
 
         model.addAttribute("submitted", true);

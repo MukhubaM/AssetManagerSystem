@@ -1,98 +1,114 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Manage Users - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Manage Users</h2>
+        <div class="mwrap">
 
-    <table>
+            <div th:replace="~{fragments/topbar :: topbar('Manage Users')}"></div>
 
-        <tr>
-            <th>Name</th>
-            <th>  </th>
-            <th>Email</th>
-            <th>  </th>
-            <th>Department</th>
-            <th>  </th>
-            <th>Role</th>
-            <th>  </th>
-            <th>Status</th>
-            <th>  </th>
-            <th>Actions</th>
-        </tr>
+            <div class="main">
 
-        <tr th:each="user : ${users}">
+                <div class="ph">
+                    <div>
+                        <div class="pt">Manage Users</div>
+                        <div class="ps">Promote, demote or disable accounts.</div>
+                    </div>
+                </div>
 
-            <td th:text="${user.name}"></td>
-            <td>  </td>
-            <td th:text="${user.email}"></td>
-            <td>  </td>
-            <td th:text="${user.department}"></td>
-            <td>  </td>
-            <td><span class="badge" th:text="${user.role}"></span></td>
+                <div class="card">
+                    <div class="cb" style="padding:0;">
+                        <table class="tbl">
 
-            <td>
-                <span
-                        class="badge"
-                        th:text="${user.enabled} ? 'ENABLED' : 'DISABLED'">
-                </span>
-            </td>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Department</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
 
-            <td>
+                            <tr th:each="user : ${users}">
 
-                <form
-                        class="inline-form"
-                        th:action="@{/admin/users/{id}/role(id=${user.userId})}"
-                        method="post">
+                                <td class="cp" th:text="${user.name}"></td>
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.department}"></td>
 
-                    <select name="role" style="display:inline-block; width:auto; margin:0;">
-                        <option
-                                th:each="r : ${roles}"
-                                th:value="${r}"
-                                th:text="${r}"
-                                th:selected="${r == user.role}">
-                        </option>
-                    </select>
+                                <td>
+                                    <span class="b bb"><span class="bd"></span><span th:text="${user.role}"></span></span>
+                                </td>
 
-                    <button type="submit" style="margin-top:0;">Update Role</button>
+                                <td>
+                                <span
+                                        class="b"
+                                        th:classappend="${user.enabled} ? 'bg' : 'bs'"
+                                        th:text="${user.enabled} ? 'ENABLED' : 'DISABLED'">
+                                </span>
+                                </td>
 
-                </form>
+                                <td>
 
-                <form
-                        class="inline-form"
-                        th:if="${user.enabled}"
-                        th:action="@{/admin/users/{id}/disable(id=${user.userId})}"
-                        method="post">
+                                    <div class="flex g6" style="flex-wrap:wrap;">
 
-                    <button type="submit" class="danger" style="margin-top:0;">Disable</button>
+                                        <form
+                                                class="flex g6"
+                                                th:action="@{/admin/users/{id}/role(id=${user.userId})}"
+                                                method="post">
 
-                </form>
+                                            <select name="role" class="fs" style="width:auto;">
+                                                <option
+                                                        th:each="r : ${roles}"
+                                                        th:value="${r}"
+                                                        th:text="${r}"
+                                                        th:selected="${r == user.role}">
+                                                </option>
+                                            </select>
 
-                <form
-                        class="inline-form"
-                        th:unless="${user.enabled}"
-                        th:action="@{/admin/users/{id}/enable(id=${user.userId})}"
-                        method="post">
+                                            <button type="submit" class="btn btns bsm">Update Role</button>
 
-                    <button type="submit" class="secondary" style="margin-top:0;">Enable</button>
+                                        </form>
 
-                </form>
+                                        <form
+                                                th:if="${user.enabled}"
+                                                th:action="@{/admin/users/{id}/disable(id=${user.userId})}"
+                                                method="post">
+                                            <button type="submit" class="btn btnd bsm">Disable</button>
+                                        </form>
 
-            </td>
+                                        <form
+                                                th:unless="${user.enabled}"
+                                                th:action="@{/admin/users/{id}/enable(id=${user.userId})}"
+                                                method="post">
+                                            <button type="submit" class="btn btns bsm">Enable</button>
+                                        </form>
 
-        </tr>
+                                    </div>
 
-    </table>
+                                </td>
 
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 </body>

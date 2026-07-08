@@ -93,20 +93,18 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
         notificationService.notify(
                 user,
-                NotificationType.ACCOUNT,
-                "Your password was changed",
-                "Your Asset Manager password was just reset. If this wasn't you, contact an administrator immediately.");
+                NotificationType.ACCOUNT, "Your password was changed", "Your Asset Manager password was just reset. If this wasn't you, contact an administrator immediately.");
 
         log.info("Password reset completed for user {}", user.getEmail());
     }
 
     @Override
-    public void recoverUsername(String employeeNumber, String idNumber) {
+    public void recoverUsername(String memberNumber, String idNumber) {
 
-        userRepository.findByEmployeeNumberAndIdNumber(employeeNumber, idNumber).ifPresent(user -> {
+        userRepository.findByMemberNumberAndIdNumber(memberNumber, idNumber).ifPresent(user -> {
 
             String body = "Hello " + user.getName() + ",\n\n"
-                    + "You (or someone with your employee number and ID number) requested a reminder "
+                    + "You (or someone with your member number and ID number) requested a reminder "
                     + "of your Asset Manager username.\n\n"
                     + "Your username is your email address: " + user.getEmail() + "\n\n"
                     + "If you didn't request this, you can safely ignore this email.";
@@ -115,6 +113,5 @@ public class PasswordResetServiceImpl implements PasswordResetService {
 
             auditLogService.log(user.getUserId(), "USER", user.getUserId(), "USERNAME_RECOVERY_REQUESTED");
         });
-
     }
 }

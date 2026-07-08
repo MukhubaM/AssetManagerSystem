@@ -1,43 +1,72 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" data-theme="light" data-scheme="azure">
 <head>
     <meta charset="UTF-8">
     <title>Loan History - Asset Manager</title>
+    <script th:src="@{/js/theme.js}"></script>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
 
-<div th:replace="~{fragments/nav :: nav}"></div>
+<div id="root">
+    <div class="shell">
 
-<div class="container">
+        <div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
-    <h2>Loan History</h2>
+        <div class="mwrap">
 
-    <table>
+            <div th:replace="~{fragments/topbar :: topbar('Loan History')}"></div>
 
-        <tr>
-            <th>Borrower</th>
-            <th>Asset</th>
-            <th>Requested</th>
-            <th>Checked Out</th>
-            <th>Returned</th>
-            <th>Status</th>
-        </tr>
+            <div class="main">
 
-        <tr th:each="loan : ${loans}">
+                <div class="ph">
+                    <div>
+                        <div class="pt">Loan History</div>
+                        <div class="ps">Every loan, past and present.</div>
+                    </div>
+                </div>
 
-            <td th:text="${loan.borrower.name}"></td>
-            <td th:text="${loan.asset.title}"></td>
-            <td th:text="${loan.requestDate}"></td>
-            <td th:text="${loan.checkoutDate}"></td>
-            <td th:text="${loan.returnDate}"></td>
-            <td><span class="badge" th:text="${loan.status}"></span></td>
+                <div class="card">
+                    <div class="cb" style="padding:0;">
+                        <table class="tbl">
 
-        </tr>
+                            <tr>
+                                <th>Borrower</th>
+                                <th>Asset</th>
+                                <th>Requested</th>
+                                <th>Checked Out</th>
+                                <th>Returned</th>
+                                <th>Status</th>
+                            </tr>
 
-    </table>
+                            <tr th:each="loan : ${loans}">
 
+                                <td th:text="${loan.borrower.name}"></td>
+                                <td class="cp" th:text="${loan.asset.title}"></td>
+                                <td th:text="${loan.requestDate}"></td>
+                                <td th:text="${loan.checkoutDate}"></td>
+                                <td th:text="${loan.returnDate}"></td>
+                                <td>
+                                <span
+                                        class="b"
+                                        th:classappend="${loan.status.name() == 'PENDING'} ? 'ba' : (${loan.status.name() == 'REJECTED' or loan.status.name() == 'OVERDUE'} ? 'br' : (${loan.status.name() == 'RETURNED'} ? 'bs' : 'bb'))">
+                                    <span class="bd"></span>
+                                    <span th:text="${loan.status}"></span>
+                                </span>
+                                </td>
+
+                            </tr>
+
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
 </div>
 
 </body>

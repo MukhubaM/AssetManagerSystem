@@ -21,6 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+
     // Personal information
     private String name;
 
@@ -40,15 +41,16 @@ public class User {
 
 
     // Employment information
-    private String employeeNumber;
-
     @Column(unique = true)
+    private String memberNumber;
+
+    @Column(unique = true, length = 13)
     private String idNumber;
 
     private String department;
 
+    @Column
     private String position;
-
 
     // Account information
     @Enumerated(EnumType.STRING)
@@ -88,8 +90,9 @@ public class User {
     private Boolean canGenerateReports;
 
 
-    // Profile/settings
+    // Profile / settings
     private String profilePicturePath;
+
 
     // A basic uploaded document(stored as ID document)
     private String documentPath;

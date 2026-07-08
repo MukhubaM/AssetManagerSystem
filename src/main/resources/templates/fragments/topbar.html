@@ -1,10 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>$Title$</title>
-</head>
+<html xmlns:th="http://www.thymeleaf.org">
 <body>
-$END$
+
+<div th:fragment="topbar(pageTitle)" class="topbar">
+
+    <div class="tb-title" th:text="${pageTitle}">Page Title</div>
+
+    <div class="tb-right">
+
+        <select id="schemeSelect" class="scheme-sel" aria-label="Color scheme">
+            <option value="azure">Azure Blue</option>
+            <option value="teal">Teal Green</option>
+            <option value="violet">Deep Violet</option>
+            <option value="rose">Rose Red</option>
+            <option value="amber">Warm Amber</option>
+            <option value="emerald">Emerald</option>
+        </select>
+
+        <div class="theme-toggle">
+            <button type="button" id="themeLightBtn" class="tt-btn" aria-label="Light theme">
+                <span th:replace="~{fragments/icons :: ic-sun}"></span>
+            </button>
+            <button type="button" id="themeDarkBtn" class="tt-btn" aria-label="Dark theme">
+                <span th:replace="~{fragments/icons :: ic-moon}"></span>
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
 </body>
 </html>
