@@ -13,15 +13,14 @@
 
     <div class="card" style="width:100%; max-width:520px; padding:28px;">
 
-        <div class="flex aic g10 mb16">
+        <div class="flex aic g10 mb16" style="justify-content:center; margin-top:4px;">
             <div class="sb-logo"><span th:replace="~{fragments/icons :: ic-logo}"></span></div>
             <div class="tb-title">ATLAS AMS</div>
         </div>
 
-        <p class="ph"><span class="pt">User Registration</span></p>
+        <p class="ph mb16" style="justify-content:center; text-align:center;"><span class="pt">Registration</span></p>
         <p class="ps mb16">
-            Register as a Borrower to request and return assets or a Manager to approve loans
-            and manage assets. Admin access is granted separately by an existing administrator.
+            Register as a Borrower to request and return assets or as Manager to approve loans and manage assets.
         </p>
 
         <form
@@ -200,7 +199,7 @@
             <div class="fg">
                 <label class="fl" for="document">Supporting Document (optional)</label>
                 <input class="fi" type="file" id="document" th:field="*{document}">
-                <p class="txs tmute">E.g. proof of employment. Just stored on file - no verification is performed.</p>
+                <p class="txs tmute">E.g. ID copy. Upload file - for verification to be performed.</p>
             </div>
 
             <label class="flex g8" style="align-items:flex-start;">

@@ -23,6 +23,7 @@ public class User {
 
 
     // Personal information
+    @Column(length = 100)
     private String name;
 
     @Enumerated(EnumType.STRING)
@@ -35,8 +36,10 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    @Column(length = 20)
     private String phone;
 
+    @Column(length = 250)
     private String address;
 
 
@@ -49,7 +52,7 @@ public class User {
 
     private String department;
 
-    @Column
+    @Column(length = 50)
     private String position;
 
     // Account information

@@ -27,6 +27,7 @@ public class FileStorageServiceImpl implements FileStorageService {
 
         try {
             if (file == null || file.isEmpty()) {
+
                 return null;
             }
 

@@ -2,6 +2,7 @@ package com.assetmanager.AssetManagementSystem.entity;
 
 import jakarta.persistence.*;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,8 +21,12 @@ public class Asset {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long assetId;
 
+    @Column(length = 100)
+    @NotBlank
     private String title;
 
+    @Column(length = 100)
+    @NotBlank
     private String category;
 
     @Column(unique = true)
@@ -34,8 +39,12 @@ public class Asset {
     // This the rental rate, managers must set when adding an item (startup cost)
     private BigDecimal dailyRate;
 
+    @Column(length = 100)
+    @NotBlank
     private String location;
 
+    @Column(length = 100)
+    @NotBlank
     private String condition;
 
     private String photoPath;
