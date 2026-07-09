@@ -24,7 +24,7 @@ PostgreSQL.
 - Loan history and overdue reports for staff
 
 **Payments (mock)**
-- A self-contained transaction ledger — no real payment processor is involved, just mock payment code
+- A self-contained transaction ledger, no real payment processor is involved, just mock payment code
 - Initiate → confirm → rollback. Rollback deletes the transaction record rather
   than modeling a refund and is blocked once a loan has actually been checked
   out
@@ -67,7 +67,7 @@ PostgreSQL.
 | Manage users (roles, enable/disable) | | | ✅ |
 | View audit log | | | ✅ |
 
-Managers can also request loans themselves (they show up under "My Loans" same
+Managers can also request loans themselves (they show up under 'My Loans' same
 as a borrower), the role only affects staff-side permissions, not whether
 someone can borrow something.
 
@@ -93,11 +93,11 @@ someone can borrow something.
 
 ### 1. Create a database
 ```bash
-createdb postgres   # or whatever database name you plan to use
+createdb postgres   # or whatever database name you like
 ```
 The app connects to `postgres` on `localhost:5432` by default
 
-### 2. Configure environment variables (optional for local dev)
+### 2. Configure environment variables (optional for local development)
 
 Everything has a sane default for local development except the mail
 credentials, which are optional. Nothing below is
@@ -113,10 +113,10 @@ credentials.
 | `MAIL_PORT` | `587` | SMTP port |
 | `MAIL_USERNAME` | *(empty)* | SMTP username |
 | `MAIL_PASSWORD` | *(empty)* | SMTP password |
-| `MAIL_FROM` | `no-reply@assetmanager.local` | "From" address on outgoing emails |
+| `MAIL_FROM` | `no-reply@assetmanager.local` | 'From' address on outgoing emails |
 | `APP_BASE_URL` | `http://localhost:8080` | Used to build absolute links in emails (e.g. password reset) |
-| `ADMIN_EMAIL` | `admin@example.com` | Bootstrap admin login — see below |
-| `ADMIN_PASSWORD` | `ChangeMe123!` | Bootstrap admin password — **change this in production** |
+| `ADMIN_EMAIL` | `admin@example.com` | Bootstrap admin login  see below |
+| `ADMIN_PASSWORD` | `ChangeMe123!` | Bootstrap admin password  **change this in production** |
 
 ### 3. Run it
 ```bash
@@ -149,9 +149,8 @@ java -jar target/AssetManagementSystem-0.0.1-SNAPSHOT.jar
 
 ```
 src/main/java/.../AssetManagementSystem/
-├── config/          Startup tasks (admin bootstrap, member-number backfill),
-│                    web/model-attribute configuration
-├── controller/      MVC controllers - one per feature area
+├── config/          Startup tasks (admin bootstrap, member-number backfill), web/model-attribute configuration
+├── controller/      MVC controllers (one per feature area)
 ├── dto/             Request/form objects (validation lives here)
 ├── entity/          JPA entities and enums
 ├── exception/       Custom exceptions + a global @ControllerAdvice handler
@@ -170,16 +169,16 @@ src/main/resources/
 
 ## Design notes
 
-A few deliberate decisions worth knowing about before you extend this:
+A few deliberate decisions worth knowing about before extending this:
 
 - **Payments are a mock system.** There's no Stripe/PayPal integration, it's
   an internal ledger for practicing the initiate/confirm/rollback flow.
-  "Rollback" deletes the transaction row rather than modeling a real refund.
+  'Rollback' deletes the transaction row rather than modeling a real refund.
 - **Loan duration is days-only for now(until I develop it further).** 
 - **Account deletion doesn't delete the row.** A user's loan/payment/audit
   history references their account and `Loan.borrower` is a `NOT NULL`
   foreign key, a hard delete would either crash or destroy history.
-  "Delete account" disables the account and scrubs personal data instead.
+  'Delete account' disables the account and scrubs personal data instead.
 - **Every association actually used in a template is `EAGER`(I changed it from `LAZY`).** The app runs
   with `spring.jpa.open-in-view=false` so the Hibernate session is closed
   before a view renders. If you add a field to a template that follows a new
