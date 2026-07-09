@@ -47,7 +47,7 @@ PostgreSQL.
 - In-app notifications for loan approval/rejection, checkout, return, overdue
   and the 48-hour warning, unread badge pops in the sidebar
 - Overdue and account-security notifications are also emailed (configurable
-  per-user in Settings), email delivery fails soft, SMTP isn't configured,
+  per-user in Settings), if email delivery fails, it fails soft, SMTP is configured,
   the app keeps working and just logs the message instead
 
 **Admin**
