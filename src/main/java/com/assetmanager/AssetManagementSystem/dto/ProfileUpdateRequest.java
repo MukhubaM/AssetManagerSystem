@@ -2,6 +2,7 @@ package com.assetmanager.AssetManagementSystem.dto;
 
 import com.assetmanager.AssetManagementSystem.entity.Gender;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Past;
@@ -16,14 +17,18 @@ import java.time.LocalDate;
 public class ProfileUpdateRequest {
 
     @NotBlank
+    @Column(length = 150)
     private String name;
 
     @Email
     @NotBlank
+    @Column(length = 100)
     private String email;
 
+    @Column(length = 20)
     private String phone;
 
+    @Column(length = 250)
     private String address;
 
     private Gender gender;

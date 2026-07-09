@@ -20,7 +20,7 @@ public class RegistrationRequest {
     @NotBlank
     private String name;
 
-    @NotNull(message = "Please select a gender")
+    @NotNull(message = "Please select gender")
     private Gender gender;
 
     @NotNull(message = "Please enter your date of birth")
